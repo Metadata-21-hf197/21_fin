@@ -4,6 +4,7 @@ import Word from './pages/Word';
 import Home from './pages/Home';
 import Terms from './pages/Terms';
 import DomainCode from './pages/DomainCode';
+import React from 'react';
 
 function Main() {
   return (

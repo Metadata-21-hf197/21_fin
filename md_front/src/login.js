@@ -1,16 +1,17 @@
 import './App.css';
 import styled from 'styled-components';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-import Main from './main.js';
+
+
 function Login() {
     
     const onClick = () => {
-           alert('로그인 성공'); 
+      alert('로그인버튼 눌림');
     };
+
   return (
     <div>
-      <h1>MetaData Managememt System</h1>
+      <Header>MetaData Managememt System</Header>
       <Container>
         <h1>Login</h1>
         <Input id="id" name="id" placeholder="아이디를 입력해주세요" />
@@ -26,6 +27,14 @@ function Login() {
     
   );
 }
+
+const Header = styled.h1`
+  justify-content: center;
+  align-items: center;
+  width: 50vw;
+  flex-direction: column;
+  margin: 0 auto;
+`;
 
 const Container = styled.div`
   margin-top: 100px;

@@ -11,7 +11,7 @@ function Navbar() {
   const [sidebar, setSidebar] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
   return (
-    <>
+    <div>
       {/* 아이콘 컬러 전체 변경 기능 */}
       <IconContext.Provider value={{ color: '#fff' }}>
         {/* 네비게이션 토글 코드*/}
@@ -41,7 +41,8 @@ function Navbar() {
           </ul>
         </nav>
       </IconContext.Provider>
-    </>
+    </div>
   );
 }
+
 export default Navbar;
