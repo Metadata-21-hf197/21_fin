@@ -28,7 +28,8 @@ public class Word {
 
     @Column(nullable = false)
     private int index;
-    // default 값 추가시 @DynamicInsert 사용
+    // 필요한 지 모르겠음
+    // 처리만 어려움
 
     @Column(nullable = false)
     private boolean banWord;
