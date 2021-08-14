@@ -27,10 +27,5 @@ public class Word {
     private String korName;
 
     @Column(nullable = false)
-    private int index;
-    // 필요한 지 모르겠음
-    // 처리만 어려움
-
-    @Column(nullable = false)
     private boolean banWord;
 }

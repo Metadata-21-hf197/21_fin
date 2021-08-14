@@ -27,9 +27,6 @@ public class Domain {
     private String korName;
 
     @Column(nullable = false)
-    private int index;
-
-    @Column(nullable = false)
     private boolean banWord;
 
     @Column(nullable = false)
