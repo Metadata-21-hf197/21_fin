@@ -1,6 +1,0 @@
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://ec2-user@ec2-3-14-142-55.us-east-2.compute.amazonaws.com:3306/METADATA?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: Data1234!
