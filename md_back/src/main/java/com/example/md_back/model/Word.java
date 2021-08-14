@@ -27,9 +27,5 @@ public class Word {
     private String korName;
 
     @Column(nullable = false)
-    private int index;
-    // default 값 추가시 @DynamicInsert 사용
-
-    @Column(nullable = false)
     private boolean banWord;
 }
