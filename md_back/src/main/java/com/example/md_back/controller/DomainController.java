@@ -21,7 +21,7 @@ public class DomainController {
      * @param domain, principal
      * @return
      */
-    @PostMapping("/domain")
+    @PostMapping("/domain/insert")
     public Map<String, Object> insert(@RequestBody Domain domain){ // 세션의 유저 정보 받아 옴
         // domain 객체 받아옴
         domainService.insertDomain(domain); // 유저정보 추가 할것
