@@ -39,7 +39,7 @@ public class User {
     private Timestamp quitDate;
 
     @Column(nullable = false)
-    private String quitStatus;
+    private boolean quitStatus;
 
     @Column(nullable = false)
     private String access;
