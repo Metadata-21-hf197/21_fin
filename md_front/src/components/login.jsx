@@ -1,40 +1,29 @@
-import './App.css';
+
 import styled from 'styled-components';
 import React from 'react';
 
 
 function Login() {
-    
-    const onClick = () => {
-      alert('로그인버튼 눌림');
-    };
-
+  
   return (
     <div>
-      <Header>MetaData Managememt System</Header>
       <Container>
         <h1>Login</h1>
-        <Input id="id" name="id" placeholder="아이디를 입력해주세요" />
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="비밀번호를 입력해주세요"
-        />
-        <Button onClick={onClick}>로그인하기</Button>
+        <form action="/user/join" method="post">
+          <Input id="email" name="email" placeholder="아이디(이메일)를 입력해주세요" />
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="비밀번호를 입력해주세요"
+          />
+          <Button type="submit">로그인하기</Button>
+        </form>
       </Container>
     </div>
-    
   );
 }
 
-const Header = styled.h1`
-  justify-content: center;
-  align-items: center;
-  width: 50vw;
-  flex-direction: column;
-  margin: 0 auto;
-`;
 
 const Container = styled.div`
   margin-top: 100px;
