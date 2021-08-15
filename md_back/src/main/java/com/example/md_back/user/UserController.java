@@ -1,20 +1,21 @@
 package com.example.md_back.user;
 
 import com.example.md_back.model.User;
+import com.example.md_back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RequestMapping("/mms")
 public class UserController {
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     //join form
     @GetMapping("/user/join")
+    @ResponseBody
     public String userForm() {
-        return null;
+        return "user join";
     }
 
     /**
