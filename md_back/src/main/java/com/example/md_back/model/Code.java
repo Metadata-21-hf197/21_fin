@@ -30,5 +30,5 @@ public class Code {
     private boolean banWord;
 
     @Column(nullable = false)
-    private String cdType;
+    private String domainName;
 }
