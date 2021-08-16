@@ -28,4 +28,7 @@ public class Term {
 
     @Column(nullable = false)
     private boolean banWord;
+
+    @Column(nullable = true)
+    private boolean deleteStatus;
 }

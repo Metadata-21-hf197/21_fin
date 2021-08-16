@@ -32,5 +32,7 @@ public class Domain {
     @Column(nullable = false)
     private String type;
 
+    @Column(nullable = false)
+    private boolean deleteStatus;
     // synId
 }
