@@ -3,7 +3,9 @@ package com.example.md_back.service;
 import com.example.md_back.model.Term;
 import com.example.md_back.repository.TermRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TermService {
 
     @Autowired

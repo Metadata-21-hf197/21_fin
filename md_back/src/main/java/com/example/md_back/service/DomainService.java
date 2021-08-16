@@ -3,7 +3,9 @@ package com.example.md_back.service;
 import com.example.md_back.model.Domain;
 import com.example.md_back.repository.DomainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DomainService {
 
     @Autowired

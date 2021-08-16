@@ -3,10 +3,12 @@ package com.example.md_back.user;
 import com.example.md_back.model.User;
 import com.example.md_back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Controller
 public class UserController {
     @Autowired
     private UserRepository userRepository;

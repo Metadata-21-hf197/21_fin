@@ -3,10 +3,11 @@ package com.example.md_back.controller;
 import com.example.md_back.model.Word;
 import com.example.md_back.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
-@RequestMapping("/mms")
+@Controller
 public class WordController {
 
     @Autowired

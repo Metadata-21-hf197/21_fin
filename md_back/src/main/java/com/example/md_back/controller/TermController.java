@@ -2,11 +2,12 @@ package com.example.md_back.controller;
 
 import com.example.md_back.service.TermService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RequestMapping("/mms")
+@Controller
 public class TermController {
 
     @Autowired
