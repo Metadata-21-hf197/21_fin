@@ -58,7 +58,7 @@ public class TestController {
                 .email("gildong@gmail.com")
                 .quitDate(null)
                 .quitStatus(false)
-                .access("manager")
+                .access(AccessType.ADMIN)
                 .build();
         Word word = Word.builder()
                 .engName("soup")
