@@ -13,12 +13,23 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    //join form
+    /** get joinForm
+     * @return user/joinForm
+     */
     @GetMapping("/user/join")
-    @ResponseBody
-    public String userForm() {
-        return "user join";
+    public String joinForm() {
+        return "user/joinForm";
     }
+
+    /** get updateForm
+     * @param @AuthenticationPrincipal PrincipalDetail 받아와야 함
+     * @return user/updateForm
+     */
+    @GetMapping("/user/update")
+    public String updateForm() {
+        return "user/updateForm";
+    }
+
 
     /**
      * insert user
@@ -28,7 +39,7 @@ public class UserController {
     @PostMapping("/user/join")
     @ResponseBody
     public Map<String, Object> insert() {
-        //User 객체 생성
+
         //값 setting
         //insert 동작
         //return result
