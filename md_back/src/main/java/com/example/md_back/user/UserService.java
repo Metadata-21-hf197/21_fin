@@ -11,4 +11,6 @@ public class UserService {
     private UserMapper userMapper;
 
     public User getUser(String memberName) { return userMapper.getUser(memberName);}
+    public String insertUser(User user) { return userMapper.insertUser(user);}
+    public String updateUser(User user) { return userMapper.updateUser(user);}
 }

@@ -1,9 +1,12 @@
 package com.example.md_back.user;
 
+import com.example.md_back.model.AccessType;
 import com.example.md_back.model.User;
 import com.example.md_back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -11,7 +14,11 @@ import java.util.Map;
 @Controller
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+
+    //@Autowired
+    //private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     /** get joinForm
      * @return user/joinForm
@@ -36,16 +43,19 @@ public class UserController {
      * react 사용에 따라 return 타입 변경 가능
      * @return
      */
+    @Transactional
     @PostMapping("/user/join")
     @ResponseBody
-    public Map<String, Object> insert() {
-
-        //값 setting
-        //insert 동작
+    public Map<String, Object> insert(User user) {
+       // String rawPassword = user.getPassword();
+       // System encPassword = bCryptPasswordEncoder.encode(rawPassword);
+       // user.setMemberName(encPassword);
+        userService.insertUser(user);
         //return result
         return null;
     }
 
+    @Transactional
     @PutMapping("/user/update")
     @ResponseBody
     public Map<String, Object> update(User user) {
