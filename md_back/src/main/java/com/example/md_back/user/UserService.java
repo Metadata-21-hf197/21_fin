@@ -11,4 +11,6 @@ public class UserService {
     private UserMapper userMapper;
 
     public User getUser(String memberName) { return userMapper.getUser(memberName);}
+
+    public User checkUser(User user) { return userMapper.checkUser(user);}
 }

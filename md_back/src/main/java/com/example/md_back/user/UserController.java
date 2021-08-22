@@ -5,12 +5,51 @@ import com.example.md_back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Map;
 
+@RestController
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
+    public static final String LOGINFORM = "user/loginform";
+
+    //login form
+    @GetMapping("/user/loginform")
+    @ResponseBody
+    public String loginForm() {return LOGINFORM;}
+
+    //login func
+    @GetMapping("/user/login")
+    @ResponseBody
+    public Map<String, Object> login(
+            HttpServletRequest request,
+            @RequestParam String memberName, @RequestParam String password) {
+        //setting login command
+        User user = new User();
+        user.setMemberName(memberName);
+        user.setPassword(password);
+
+        //compare DB
+        User checkUser = userService.checkUser(user);
+        HttpSession userSession = null;
+        if (checkUser == null) { //not correct
+        } else { //correct
+            System.out.println("login Success");
+            userSession = request.getSession();
+            userSession.setAttribute("user", checkUser);
+
+
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("user", userSession);
+
+        return map;
+
+    }
     //join form
     @GetMapping("/user/join")
     @ResponseBody

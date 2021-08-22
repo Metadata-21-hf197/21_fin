@@ -8,4 +8,7 @@
     <select id="getUser" resultType="com.example.md_back.model.User">
         SELECT * from User where memberName=#{memberName};
     </select>
+    <select id="checkUser" parameterType="com.example.md_back.model.User" resultType="com.example.md_back.model.User">
+        SELECT  memberId, access, email, enrollDate, memberName, quitStatus FROM User where memberName=#{memberName} and password=#{password}
+    </select>
 </mapper>
