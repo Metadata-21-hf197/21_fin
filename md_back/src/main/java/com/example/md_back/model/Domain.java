@@ -1,11 +1,15 @@
 package com.example.md_back.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -32,5 +36,24 @@ public class Domain {
     @Column(nullable = false)
     private String type;
 
-    // synId
+    @OneToMany(mappedBy = "domain", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"domain"})
+    private List<Code> codes;
+
+    @Column(nullable = false)
+    private boolean deleteStatus;
+
+    @ManyToOne
+    @JoinColumn(name="crateUserId")
+    private User creationUser;
+
+    @CreationTimestamp
+    private Timestamp creationDate;
+
+    @ManyToOne
+    @JoinColumn(name="updateUserId")
+    private User modifyUser;
+
+    @CreationTimestamp
+    private Timestamp modifyDate;
 }

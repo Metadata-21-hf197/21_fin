@@ -1,5 +1,6 @@
 package com.example.md_back.user;
 
+import com.example.md_back.model.AccessType;
 import com.example.md_back.model.User;
 import com.example.md_back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class UserTest {
                 .email("yyy@gmail.com")
                 .quitDate(null)
                 .quitStatus(false)
-                .access("admin")
+                .access(AccessType.ADMIN)
                 .build();
 
         System.out.println(user);

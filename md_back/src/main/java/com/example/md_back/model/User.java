@@ -41,7 +41,7 @@ public class User {
     @Column(nullable = false)
     private boolean quitStatus;
 
-    @Column(nullable = false)
-    private String access;
+    @Enumerated(EnumType.STRING)
+    private AccessType access;
 
 }
