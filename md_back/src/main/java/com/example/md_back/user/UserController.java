@@ -19,8 +19,13 @@ public class UserController {
     //@Autowired
     //private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    //@AutoWired
+    //private AuthenticationManager authenticationManager;
 
-    /** get joinForm
+
+    /**
+     * get joinForm
+     *
      * @return user/joinForm
      */
     @GetMapping("/user/join")
@@ -28,7 +33,9 @@ public class UserController {
         return "user/joinForm";
     }
 
-    /** get updateForm
+    /**
+     * get updateForm
+     *
      * @param @AuthenticationPrincipal PrincipalDetail 받아와야 함
      * @return user/updateForm
      */
@@ -37,37 +44,80 @@ public class UserController {
         return "user/updateForm";
     }
 
+    /**
+     * get quitForm
+     *
+     * @return user/quitForm
+     */
+    @GetMapping("/user/quit")
+    public String quitForm() {
+        return "user/quitForm";
+    }
+
 
     /**
      * insert user
      * react 사용에 따라 return 타입 변경 가능
+     *
      * @return
      */
     @Transactional
     @PostMapping("/user/join")
     @ResponseBody
     public Map<String, Object> insert(User user) {
-       // String rawPassword = user.getPassword();
-       // System encPassword = bCryptPasswordEncoder.encode(rawPassword);
-       // user.setMemberName(encPassword);
+        // String rawPassword = user.getPassword();
+        // String encPassword = bCryptPasswordEncoder.encode(rawPassword);
+        // user.setMemberName(encPassword);
         userService.insertUser(user);
         //return result
         return null;
     }
 
+    /**
+     * userUpdate
+     *
+     * @param user
+     * @return
+     */
     @Transactional
     @PutMapping("/user/update")
     @ResponseBody
     public Map<String, Object> update(User user) {
-        //User 객체 확인
-        // 새 값 setting
-        //update
-        //return result
+        User updateUser = userService.getUser(user.getMemberName());
+        // updateUser Exceptions~
+
+        // String rawPassword = user.getPassword();
+        // String encPassword = bCryptPasswordEncoder.encode(rawPassword);
+        updateUser.setEmail(user.getEmail());
+
+        // 세션 업데이트 부분
+        // Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        // SecurityContextHolder.getContext().setAuthentication(authentication);
         return null;
     }
 
     /**
+     * quit
+     * 로그인에서 quitStatus 확인 절차 필요
+     *
+     * @param user
+     * @return
+     */
+    @Transactional
+    @PutMapping("/user/quit")
+    @ResponseBody
+    public Map<String, Object> quit(User user) {
+        User updateUser = userService.getUser(user.getMemberName());
+        // updateUser Exceptions~
+        updateUser.setQuitStatus(true);
+        // updateUser.setQuitDate();
+        return null;
+    }
+
+
+    /**
      * delete동작에서는 session으로 사용자 확인 후 동작 가능
+     *
      * @param user
      * @return
      */
