@@ -8,6 +8,5 @@ import java.util.Map;
 @Mapper
 public interface UserMapper {
     public User getUser(String memberName);
-    public String insertUser(User user);
-    public String updateUser(User user);
+    public User checkUser(User user);
 }

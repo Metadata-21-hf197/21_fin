@@ -9,25 +9,52 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Map;
 
-@Controller
+@RestController
 public class UserController {
     @Autowired
     private UserService userService;
 
-    //@Autowired
-    //private BCryptPasswordEncoder bCryptPasswordEncoder;
+    public static final String LOGINFORM = "user/loginform";
 
-    //@AutoWired
-    //private AuthenticationManager authenticationManager;
+    //login form
+    @GetMapping("/user/loginform")
+    @ResponseBody
+    public String loginForm() {return LOGINFORM;}
+
+    //login func
+    @GetMapping("/user/login")
+    @ResponseBody
+    public Map<String, Object> login(
+            HttpServletRequest request,
+            @RequestParam String memberName, @RequestParam String password) {
+        //setting login command
+        User user = new User();
+        user.setMemberName(memberName);
+        user.setPassword(password);
+
+        //compare DB
+        User checkUser = userService.checkUser(user);
+        HttpSession userSession = null;
+        if (checkUser == null) { //not correct
+        } else { //correct
+            System.out.println("login Success");
+            userSession = request.getSession();
+            userSession.setAttribute("user", checkUser);
 
 
-    /**
-     * get joinForm
-     *
-     * @return user/joinForm
-     */
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("user", userSession);
+
+        return map;
+
+    }
+    //join form
     @GetMapping("/user/join")
     public String joinForm() {
         return "user/joinForm";
