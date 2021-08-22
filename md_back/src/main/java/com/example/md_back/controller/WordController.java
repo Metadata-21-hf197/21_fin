@@ -14,9 +14,20 @@ public class WordController {
     private WordService wordService;
 
     @GetMapping("/word/insert")
-    @ResponseBody
-    public String wordForm(){
-        return "word/form";
+    public String insertForm(){
+        return "word/insertForm";
+    }
+
+    @GetMapping("/word/{wordId}/update")
+    public String updateForm(@PathVariable int wordId){
+        wordService.wordDetail(wordId);
+        return "word/updateForm";
+    }
+
+    @GetMapping("/word/{wordId}")
+    public String wordDetail(@PathVariable int wordId){
+        wordService.wordDetail(wordId);
+        return "word/detail";
     }
 
     /** 단어 추가 시 권한 확인, 세션의 유저 정보 받아서 서비스로 리턴도 해줘야함
@@ -37,7 +48,7 @@ public class WordController {
      * @return
      */
     @PutMapping("/word/update/{wordId}") // /word/{wordId}로 수정
-    public Map<String, Object> update(@PathVariable int wordId){ // 세션의 유저 정보 받아 옴
+    public Map<String, Object> update(@PathVariable int wordId, @RequestBody Word word){ // 세션의 유저 정보 받아 옴
         // word 객체 받아옴
         wordService.updateWord(wordId,null); // 유저정보 추가 할것
         // httpStatus return
