@@ -40,7 +40,9 @@ public class UserController {
         //compare DB
         User checkUser = userService.checkUser(user);
         HttpSession userSession = null;
+        Map<String, Object> map = new HashMap<String, Object>();
         if (checkUser == null) { //not correct
+            map.put("errormsg", "No User");
         } else { //correct
             System.out.println("login Success");
             userSession = request.getSession();
@@ -48,7 +50,7 @@ public class UserController {
 
 
         }
-        Map<String, Object> map = new HashMap<String, Object>();
+
         map.put("user", userSession);
 
         return map;
