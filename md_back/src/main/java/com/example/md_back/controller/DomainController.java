@@ -14,8 +14,9 @@ public class DomainController {
     @Autowired
     private DomainService domainService;
 
+    @GetMapping("/domain/insertForm")
     public String domainForm(){
-        return null;
+        return "domain/form";
     }
 
     /** 도메인 추가 시 권한 확인, 세션의 유저 정보 받아서 서비스로 리턴도 해줘야함
