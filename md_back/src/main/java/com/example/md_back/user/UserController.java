@@ -22,36 +22,34 @@ public class UserController {
     @ResponseBody
     public String loginForm() {return LOGINFORM;}
 
-    //login func
-    @GetMapping("/user/login")
-    @ResponseBody
-    public Map<String, Object> login(
-            HttpServletRequest request,
-            @RequestParam String memberName, @RequestParam String password) {
-        //setting login command
-        User user = new User();
-        user.setMemberName(memberName);
-        user.setPassword(password);
-
-        //compare DB
-        User checkUser = userService.checkUser(user);
-        HttpSession userSession = null;
-        Map<String, Object> map = new HashMap<String, Object>();
-        if (checkUser == null) { //not correct
-            map.put("errormsg", "No User");
-        } else { //correct
-            System.out.println("login Success");
-            userSession = request.getSession();
-            userSession.setAttribute("user", checkUser);
-
-
-        }
-
-        map.put("user", userSession);
-
-        return map;
-
-    }
+//    //login func
+//    @GetMapping("/user/login")
+//    @ResponseBody
+//    public Map<String, Object> login(
+//            HttpServletRequest request,
+//            @RequestParam String memberName, @RequestParam String password) {
+//        //setting login command
+//        User user = new User();
+//        user.setMemberName(memberName);
+//        user.setPassword(password);
+//
+//        //compare DB
+//        User checkUser = userService.checkUser(user);
+//        HttpSession userSession = null;
+//        if (checkUser == null) { //not correct
+//        } else { //correct
+//            System.out.println("login Success");
+//            userSession = request.getSession();
+//            userSession.setAttribute("user", checkUser);
+//
+//
+//        }
+//        Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("user", userSession);
+//
+//        return map;
+//
+//    }
     //join form
     @GetMapping("/user/join")
     @ResponseBody
