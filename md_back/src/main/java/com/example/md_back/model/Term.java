@@ -42,7 +42,7 @@ public class Term {
     private Timestamp creationDate;
 
     @ManyToOne
-    @JoinColumn(name="updateUserId")
+    @JoinColumn(name="modifyUserId")
     private User modifyUser;
 
     @CreationTimestamp
