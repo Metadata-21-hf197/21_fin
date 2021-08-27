@@ -8,5 +8,5 @@ import java.util.List;
 public interface WordRepository extends JpaRepository<Word, Integer> {
     List<Word> findByEngName(String engName);
     List<Word> findByKorName(String korName);
-
+    List<Word> findByShortName(String shortName);
 }
