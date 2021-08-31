@@ -14,11 +14,15 @@ public class DomainController {
         return "domain/insertForm";
     }
 
-    @GetMapping("/domain/update")
-    public String updateForm(){
+    @GetMapping("/domain/{domainId}/update")
+    public String updateForm(@PathVariable int domainId){
+        // response Fields
         return "domain/updateForm";
     }
 
     @GetMapping("/domain/{domainId}")
-    public String domainDetail()  {return "domain/detail";}
+    public String domainDetail(@PathVariable int domainId)  {
+        // domainId
+        return "domain/detail";
+    }
 }

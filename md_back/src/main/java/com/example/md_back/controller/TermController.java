@@ -11,13 +11,15 @@ public class TermController {
         return "term/insertForm";
     }
 
-    @GetMapping("/term/updateForm")
-    public String updateForm() {
+    @GetMapping("/term/{termId}/updateForm")
+    public String updateForm(@PathVariable int termId) {
+        // response Fields
         return "term/updateForm";
     }
 
     @GetMapping("/term/{termId}")
-    public String termDetail(){
+    public String termDetail(@PathVariable int termId){
+        // termId ~
         return "term/detail";
     }
 
