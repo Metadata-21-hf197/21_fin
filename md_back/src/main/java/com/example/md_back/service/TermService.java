@@ -3,7 +3,6 @@ package com.example.md_back.service;
 import com.example.md_back.dto.RequestNamesDto;
 import com.example.md_back.model.Term;
 import com.example.md_back.model.User;
-import com.example.md_back.model.Word;
 import com.example.md_back.repository.TermRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class TermService {
                 .engName(requestNamesDto.getEngName())
                 .korName(requestNamesDto.getKorName())
                 .banWord(requestNamesDto.isBanWord())
-                // meaning
+                .meaning(requestNamesDto.getMeaning())
                 .creationUser(user)
                 .deleteStatus(false)
                 // word - term relation
@@ -35,14 +34,12 @@ public class TermService {
     @Transactional
     public void updateTerm(int termId, RequestNamesDto requestNamesDto, User user) {
         Term term = termRepository.findById(termId)
-                .orElseThrow(() -> {
-                    return new IllegalArgumentException("용어 수정 실패 : 용어를 찾을 수 없습니다.");
-                });
+                .orElseThrow(() -> new IllegalArgumentException("용어 수정 실패 : 용어를 찾을 수 없습니다."));
         term.setShortName(requestNamesDto.getShortName());
         term.setEngName(requestNamesDto.getEngName());
         term.setKorName(requestNamesDto.getKorName());
         // word - term relation
-        // meaning
+        term.setMeaning(requestNamesDto.getMeaning());
         term.setBanWord(requestNamesDto.isBanWord());
         term.setModifyUser(user);
         termRepository.save(term);
@@ -51,9 +48,7 @@ public class TermService {
     @Transactional
     public void deleteTerm(int termId, User user) {
         Term term = termRepository.findById(termId)
-                .orElseThrow(() -> {
-                    return new IllegalArgumentException("용어 삭제 실패 : 용어를 찾을 수 없습니다.");
-                });
+                .orElseThrow(() -> new IllegalArgumentException("용어 삭제 실패 : 용어를 찾을 수 없습니다."));
         term.setDeleteStatus(true);
         term.setModifyUser(user);
         termRepository.save(term);
@@ -66,12 +61,10 @@ public class TermService {
 
     @Transactional(readOnly = true)
     public Term findById(int termId) {
-        return termRepository.findById(termId).orElseThrow(() -> {
-            return new IllegalArgumentException("용어 찾기 실패 : " + termId);
-        });
+        return termRepository.findById(termId).orElseThrow(() -> new IllegalArgumentException("용어 찾기 실패 : " + termId));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Term> findByShortName(String shortName) {
         return termRepository.findByShortName(shortName);
     }
@@ -88,9 +81,8 @@ public class TermService {
 
     @Transactional
     public Term termDetail(int termId) {
+        // dto
         return termRepository.findById(termId)
-                .orElseThrow(() -> {
-                    return new IllegalArgumentException("용어 조회 실패 : 용어를 찾을 수 없습니다.");
-                });
+                .orElseThrow(() -> new IllegalArgumentException("용어 조회 실패 : 용어를 찾을 수 없습니다."));
     }
 }

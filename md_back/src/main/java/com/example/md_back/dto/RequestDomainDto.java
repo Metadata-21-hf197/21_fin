@@ -7,7 +7,7 @@ public class RequestDomainDto {
     private String shortName;
     private String engName;
     private String korName;
-    private boolean banWord;
+    private String meaning;
     private String type;
-    // codes
+    private boolean banWord;
 }

@@ -23,7 +23,7 @@ public class WordService {
                 .engName(requestNamesDto.getEngName())
                 .korName(requestNamesDto.getKorName())
                 .banWord(requestNamesDto.isBanWord())
-                // meaning
+                .meaning(requestNamesDto.getMeaning())
                 .creationUser(user)
                 .deleteStatus(false)
                 .build();
@@ -33,14 +33,12 @@ public class WordService {
     @Transactional
     public void updateWord(int wordId, RequestNamesDto requestNamesDto, User user) {
         Word word = wordRepository.findById(wordId)
-                .orElseThrow(() -> {
-                    return new IllegalArgumentException("단어 수정 실패 : 단어를 찾을 수 없습니다.");
-                });
+                .orElseThrow(() -> new IllegalArgumentException("단어 수정 실패 : 단어를 찾을 수 없습니다."));
         word.setShortName(requestNamesDto.getShortName());
         word.setEngName(requestNamesDto.getEngName());
         word.setKorName(requestNamesDto.getKorName());
+        word.setMeaning(requestNamesDto.getMeaning());
         word.setBanWord(requestNamesDto.isBanWord());
-        // meaning
         word.setModifyUser(user);
         wordRepository.save(word);
     }
@@ -48,9 +46,7 @@ public class WordService {
     @Transactional
     public void deleteWord(int wordId, User user) {
         Word word = wordRepository.findById(wordId)
-                .orElseThrow(() -> {
-                    return new IllegalArgumentException("단어 삭제 실패 : 단어를 찾을 수 없습니다.");
-                });
+                .orElseThrow(() -> new IllegalArgumentException("단어 삭제 실패 : 단어를 찾을 수 없습니다."));
         word.setDeleteStatus(true);
         word.setModifyUser(user);
         wordRepository.save(word);
@@ -63,9 +59,7 @@ public class WordService {
 
     @Transactional(readOnly = true)
     public Word findById(int wordId) {
-        return wordRepository.findById(wordId).orElseThrow(() -> {
-            return new IllegalArgumentException("단어 찾기 실패 : " + wordId);
-        });
+        return wordRepository.findById(wordId).orElseThrow(() -> new IllegalArgumentException("단어 찾기 실패 : " + wordId));
     }
 
     @Transactional
@@ -85,9 +79,8 @@ public class WordService {
 
     @Transactional
     public Word wordDetail(int wordId) {
+        // dto
         return wordRepository.findById(wordId)
-                .orElseThrow(() -> {
-                    return new IllegalArgumentException("단어 조회 실패 : 단어를 찾을 수 없습니다.");
-                });
+                .orElseThrow(() -> new IllegalArgumentException("단어 조회 실패 : 단어를 찾을 수 없습니다."));
     }
 }

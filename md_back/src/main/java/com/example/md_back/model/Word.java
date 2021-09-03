@@ -29,7 +29,8 @@ public class Word {
     @Column(nullable = true, length = 100)
     private String korName;
 
-    // meaning
+    @Lob
+    private String meaning;
 
     @Column(nullable = false)
     private boolean banWord;
@@ -38,7 +39,7 @@ public class Word {
     private boolean deleteStatus;
 
     @ManyToOne
-    @JoinColumn(name="crateUserId", nullable = false)
+    @JoinColumn(name="createUserId", nullable = false)
     private User creationUser;
 
     @CreationTimestamp

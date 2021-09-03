@@ -7,5 +7,6 @@ public class RequestNamesDto {
     private String shortName;
     private String engName;
     private String korName;
+    private String meaning;
     private boolean banWord;
 }
