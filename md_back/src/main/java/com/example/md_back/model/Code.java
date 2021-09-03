@@ -25,10 +25,4 @@ public class Code {
 
     @Column(nullable = true, length = 100)
     private String korName;
-
-    @Column(nullable = false)
-    private boolean banWord;
-
-    @Column(nullable = false)
-    private String cdType;
 }

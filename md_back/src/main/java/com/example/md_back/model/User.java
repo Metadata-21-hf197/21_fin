@@ -44,8 +44,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean quitStatus;
 
-    @Column(nullable = false)
-    private String access;
+    @Enumerated(EnumType.STRING)
+    private AccessType access;
 
     private String userRole;
 
