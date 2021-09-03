@@ -25,4 +25,8 @@ public class Code {
 
     @Column(nullable = true, length = 100)
     private String korName;
+
+    @ManyToOne
+    @JoinColumn(name="domainId", nullable = false)
+    private Domain domain;
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -28,23 +29,26 @@ public class Term {
     @Column(nullable = true, length = 100)
     private String korName;
 
+    @Lob
+    private String meaning;
+
     @Column(nullable = false)
     private boolean banWord;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private boolean deleteStatus;
 
     @ManyToOne
-    @JoinColumn(name="crateUserId")
+    @JoinColumn(name="createUserId", nullable = false)
     private User creationUser;
 
     @CreationTimestamp
     private Timestamp creationDate;
 
     @ManyToOne
-    @JoinColumn(name="updateUserId")
+    @JoinColumn(name="modifyUserId")
     private User modifyUser;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     private Timestamp modifyDate;
 }
