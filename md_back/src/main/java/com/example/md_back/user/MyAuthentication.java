@@ -1,5 +1,6 @@
 package com.example.md_back.user;
 
+import com.example.md_back.dto.LoginDTO;
 import com.example.md_back.model.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,12 +8,12 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.List;
 
 public class MyAuthentication extends UsernamePasswordAuthenticationToken {
-    User user;
+    LoginDTO principal;
 
-    public MyAuthentication(String id, String password, List<GrantedAuthority> grantedAuthorityList, User user) {
+    public MyAuthentication(String id, String password, List<GrantedAuthority> grantedAuthorityList, LoginDTO principal) {
         super(id, password, grantedAuthorityList);
-        this.user = user;
+        this.principal = principal;
     }
-    public User getUser() {return this.user;}
+    public LoginDTO getUser() {return this.principal;}
 
 }

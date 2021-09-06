@@ -29,33 +29,33 @@ public class UserConfig extends WebSecurityConfigurerAdapter {
                 "/img/**",
                 "/lib/**",
                 "/templates/fragments/**",
-                "templates/layouts/**");
+                "templates/layouts/**",
+                "templates/user/**");
 
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable();
+
         //권한 필요한 URI : antMatchers("URI").authenticated()
         //권한 불필요한 URI : antMatchers("URI").permitAll()
         http.authorizeRequests()
-                .antMatchers("/**").authenticated()
-
+//                .antMatchers("/**").permitAll()
                 //security_login
                 .and()
                 .formLogin()
-                .loginProcessingUrl("/user/login")
+//
                 .loginPage("/user/login")
-                .defaultSuccessUrl("/") //main으로 수정
-                .successHandler(new LoginSuccessHandler())
-                .failureHandler(new LoginFailHandler())
+                .loginProcessingUrl("/user/login")
+                .defaultSuccessUrl("/login/success") //main으로 수정
                 .permitAll()
 
                 .and()
                 .logout()
-                .logoutUrl("/user/logout")
+                .logoutUrl("/templates/user/logout")
                 .logoutSuccessUrl("/")//main으로 수정
                 .invalidateHttpSession(true)
-                .logoutSuccessHandler(new MyLogoutSuccessHandler())
                 .permitAll();
     }
 
