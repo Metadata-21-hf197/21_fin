@@ -3,35 +3,13 @@ import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 
-function Login() {
-  const [memberName, setMemberName] = useState('')
-  const [password, setPassword] = useState('')
-
-  const handleMemberName = (e) => {
-    setMemberName(e.target.value);
-  }
-
-  const handlePassword = (e) => {
-    setPassword(e.target.value);
-  }
-  // user/test경로로 서버에서 응답받아오는것 확인함. 변경..
-  // 메소드만 post로 변경
-  //밑 폼 액션쪽에서도 수정해야함.
-  const onClickLogin = () => {
-    Axios.get('/user/login').then((response) => {
-      if(response.data){
-        console.log(response.data);
-        // 현재 응답값은 널.
-      } else {
-        console.log('fail');
-      }
-    });
-  }
+function Join() {
+  
 
   return (
     <div>
       <Container>
-        <h1>Login</h1>
+        <h1>Join</h1>
         <form action="/user/join" method="post"> 
           <Input id="memberName" name="memberName"  placeholder="아이디를 입력해주세요" />
           <Input
@@ -40,7 +18,7 @@ function Login() {
             type="password"
             placeholder="비밀번호를 입력해주세요"
           />
-          <Button type="submit" onClick={onClickLogin}>로그인</Button>
+          <Input id="email" name="email" placeholder="이메일을 입력해주세요"/>
           <Button type="submit">회원가입</Button>
         </form>
       </Container>
@@ -94,4 +72,5 @@ const Button = styled.div`
     background-color: #efefef;
   `}
 `;
-export default Login;
+
+export default Join;
