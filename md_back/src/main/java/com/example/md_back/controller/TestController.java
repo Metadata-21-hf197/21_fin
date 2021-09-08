@@ -32,55 +32,55 @@ public class TestController {
      */
     @RequestMapping("/test/repo")
     public String repo(){
-        Code code = Code.builder()
-                .engName("Kimchi")
-                .korName("김치")
-                .banWord(false)
-                .domainName("KoreanFood")
-                .build();
-        Domain domain = Domain.builder()
-                .engName("KoreanFood")
-                .korName("한식")
-                .shortName("K-food")
-                .banWord(false)
-                .type("String")
-                .deleteStatus(false)
-                .build();
-        Term term = Term.builder()
-                .engName("KimchiSoup")
-                .korName("김치찌개")
-                .banWord(false)
-                .deleteStatus(false)
-                .build();
-        User user = User.builder()
-                .memberName("gildong")
-                .password("wkrwjs!@")
-                .email("gildong@gmail.com")
-                .quitDate(null)
-                .quitStatus(false)
-                .access(AccessType.ADMIN)
-                .build();
-        Word word = Word.builder()
-                .engName("soup")
-                .korName("찌개")
-                .banWord(false)
-                .deleteStatus(false)
-                .build();
-
-        System.out.println(code);
-        codeRepository.save(code);
-
-        System.out.println(domain);
-        domainRepository.save(domain);
-
-        System.out.println(term);
-        termRepository.save(term);
-
-        System.out.println(user);
-        userRepository.save(user);
-
-        System.out.println(word);
-        wordRepository.save(word);
+//        Code code = Code.builder()
+//                .engName("Kimchi")
+//                .korName("김치")
+//                .banWord(false)
+//                .domainName("KoreanFood")
+//                .build();
+//        Domain domain = Domain.builder()
+//                .engName("KoreanFood")
+//                .korName("한식")
+//                .shortName("K-food")
+//                .banWord(false)
+//                .type("String")
+//                .deleteStatus(false)
+//                .build();
+//        Term term = Term.builder()
+//                .engName("KimchiSoup")
+//                .korName("김치찌개")
+//                .banWord(false)
+//                .deleteStatus(false)
+//                .build();
+//        User user = User.builder()
+//                .memberName("gildong")
+//                .password("wkrwjs!@")
+//                .email("gildong@gmail.com")
+//                .quitDate(null)
+//                .quitStatus(false)
+//                .access(AccessType.ADMIN)
+//                .build();
+//        Word word = Word.builder()
+//                .engName("soup")
+//                .korName("찌개")
+//                .banWord(false)
+//                .deleteStatus(false)
+//                .build();
+//
+//        System.out.println(code);
+//        codeRepository.save(code);
+//
+//        System.out.println(domain);
+//        domainRepository.save(domain);
+//
+//        System.out.println(term);
+//        termRepository.save(term);
+//
+//        System.out.println(user);
+//        userRepository.save(user);
+//
+//        System.out.println(word);
+//        wordRepository.save(word);
 
         return "repo Test";
     }

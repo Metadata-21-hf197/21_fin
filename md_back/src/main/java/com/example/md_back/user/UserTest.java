@@ -1,5 +1,6 @@
 package com.example.md_back.user;
 
+import com.example.md_back.dto.LoginDTO;
 import com.example.md_back.model.AccessType;
 import com.example.md_back.model.User;
 import com.example.md_back.repository.UserRepository;
@@ -18,7 +19,7 @@ public class UserTest {
     @GetMapping("/user/login/{memberName}")
     @ResponseBody
     public String getUserTest(@PathVariable String memberName) {
-        User user = userService.getUser(memberName);
+        LoginDTO user = userService.getUser(memberName);
 
         return user.getMemberName() + " / " + user.getPassword();
 
@@ -32,7 +33,7 @@ public class UserTest {
                 .email("yyy@gmail.com")
                 .quitDate(null)
                 .quitStatus(false)
-                .access(AccessType.ADMIN)
+//                .access("ADMIN")
                 .build();
 
         System.out.println(user);
