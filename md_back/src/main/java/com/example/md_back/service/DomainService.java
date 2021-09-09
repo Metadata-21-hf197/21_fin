@@ -69,6 +69,9 @@ public class DomainService {
     public void addCode(int domainId, RequestNamesDto requestNamesDto, User user) {
         Domain domain = domainRepository.findById(domainId)
                 .orElseThrow(() -> new IllegalArgumentException("코드 추가 실패 : 도메인을 찾을 수 없습니다."));
+        //if(domain.getCodes().contains(requestNamesDto.getEngName())) {
+        //  return new IllegalArgumentException("코드 추가 실패 : 이미 존재하는 코드입니다.");
+        //}
         Code code = Code.builder()
                 .shortName(requestNamesDto.getShortName())
                 .engName(requestNamesDto.getEngName())
@@ -131,10 +134,9 @@ public class DomainService {
                 .orElseThrow(() -> new IllegalArgumentException("코드 찾기 실패 : " + codeId));
     }
 
-    @Transactional
-    public Domain domainDetail(int domainId) {
-        // dto
-        return domainRepository.findById(domainId)
-                .orElseThrow(() -> new IllegalArgumentException("도메인 상세 보기 실패 : 도메인을 찾을 수 없습니다."));
+
+    @Transactional(readOnly = true)
+    public List<Domain> getDomains() {
+        return domainRepository.findAll();
     }
 }

@@ -80,9 +80,7 @@ public class TermService {
     }
 
     @Transactional
-    public Term termDetail(int termId) {
-        // dto
-        return termRepository.findById(termId)
-                .orElseThrow(() -> new IllegalArgumentException("용어 조회 실패 : 용어를 찾을 수 없습니다."));
+    public List<Term> getTerms() {
+        return termRepository.findAll();
     }
 }

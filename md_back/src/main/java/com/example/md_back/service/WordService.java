@@ -77,10 +77,8 @@ public class WordService {
         return wordRepository.findByKorName(korName);
     }
 
-    @Transactional
-    public Word wordDetail(int wordId) {
-        // dto
-        return wordRepository.findById(wordId)
-                .orElseThrow(() -> new IllegalArgumentException("단어 조회 실패 : 단어를 찾을 수 없습니다."));
+    @Transactional(readOnly = true)
+    public List<Word> getWords() {
+        return wordRepository.findAll();
     }
 }

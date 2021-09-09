@@ -3,6 +3,7 @@ package com.example.md_back.controller;
 import com.example.md_back.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -12,7 +13,8 @@ public class WordController {
     private WordService wordService;
 
     @GetMapping("/word")
-    public String wordHome(){
+    public String wordHome(Model model) {
+        model.addAttribute("words", wordService.getWords());
         return "word/home";
     }
 
@@ -22,14 +24,14 @@ public class WordController {
     }
 
     @GetMapping("/word/{wordId}/update")
-    public String updateForm(@PathVariable int wordId) {
-        wordService.wordDetail(wordId);
+    public String updateForm(Model model, @PathVariable int wordId) {
+        model.addAttribute("word", wordService.findById(wordId));
         return "word/updateForm";
     }
 
     @GetMapping("/word/{wordId}")
-    public String wordDetail(@PathVariable int wordId) {
-        wordService.wordDetail(wordId);
+    public String wordDetail(Model model, @PathVariable int wordId) {
+        model.addAttribute("word", wordService.findById(wordId));
         return "word/detail";
     }
 }
