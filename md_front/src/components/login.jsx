@@ -1,48 +1,48 @@
 
 import styled from 'styled-components';
-import React, { useEffect, useState } from 'react';
-import Axios from 'axios';
+import React, { useState } from 'react';
 
-function Login() {
+
+function Login( {history} ) {
   const [memberName, setMemberName] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleMemberName = (e) => {
-    setMemberName(e.target.value);
-  }
 
-  const handlePassword = (e) => {
-    setPassword(e.target.value);
-  }
   // user/test경로로 서버에서 응답받아오는것 확인함. 변경..
   // 메소드만 post로 변경
   //밑 폼 액션쪽에서도 수정해야함.
   const onClickLogin = () => {
-    Axios.get('/user/login').then((response) => {
+    Axios.post('/user/login').then((response) => {
       if(response.data){
         console.log(response.data);
         // 현재 응답값은 널.
+        history.push('/main');
       } else {
         console.log('fail');
       }
     });
   }
+  /*const onClickLogin = () => {
+    history.push('/main');
+  };*/
+
+  const onClickJoin = () => {
+    history.push('/join');
+  };
 
   return (
     <div>
       <Container>
         <h1>Login</h1>
-        <form action="/user/join" method="post"> 
-          <Input id="memberName" name="memberName"  placeholder="아이디를 입력해주세요" />
+        <form action="/user/login" method="post"> 
+          <Input value={memberName} onChange={(e) => setMemberName(e.target.value)} placeholder="아이디를 입력해주세요" />
           <Input
-            id="password"
-            name="password"
-            type="password"
+            value={password} onChange={(e) => setPassword(e.target.password)}
             placeholder="비밀번호를 입력해주세요"
           />
-          <Button type="submit" onClick={onClickLogin}>로그인</Button>
-          <Button type="submit">회원가입</Button>
         </form>
+        <Button type="submit" onClick={onClickLogin}>로그인</Button>
+        <Button type="submit" onClick={onClickJoin}>회원가입</Button>
       </Container>
     </div>
   );
