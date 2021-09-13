@@ -83,7 +83,7 @@ let word = {
             url: "/word/" + id + "/delete",
             dataType: "json"
         }).done(function (rsp) {
-            alert("단어 삭제가 완료되었습니가.");
+            alert("단어 삭제가 완료되었습니다.");
             location.reload();
         }).fail(function (fail) {
                 alert(fail);
