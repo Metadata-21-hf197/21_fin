@@ -12,19 +12,19 @@ public class TermApiController {
     @Autowired
     private TermService termService;
 
-    @PostMapping("/term/insert")
+    @PostMapping("/term")
     public int insert(@RequestBody RequestNamesDto requestNamesDto) { // 세션의 유저 정보 받아 옴
         termService.insertTerm(requestNamesDto, null); // 유저정보 추가 할것
         return HttpStatus.OK.value();
     }
 
-    @PutMapping("/term/{termId}/update")
+    @PutMapping("/term/{termId}")
     public int update(@PathVariable int termId, @RequestBody RequestNamesDto requestNamesDto) { // 세션의 유저 정보 받아 옴
         termService.updateTerm(termId, requestNamesDto, null); // 유저정보 추가 할것
         return HttpStatus.OK.value();
     }
 
-    @DeleteMapping("/term/{termId}/delete")
+    @DeleteMapping("/term/{termId}")
     public int delete(@PathVariable int termId) {
         termService.deleteTerm(termId, null); //유저정보 추가 할것
         return HttpStatus.OK.value();

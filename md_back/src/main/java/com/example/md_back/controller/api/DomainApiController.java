@@ -13,7 +13,7 @@ public class DomainApiController {
     @Autowired
     private DomainService domainService;
 
-    @PostMapping("/domain/insert")
+    @PostMapping("/domain")
     public int insert(@RequestBody RequestDomainDto requestDomainDto){ // 세션의 유저 정보 받아 옴
         domainService.insertDomain(requestDomainDto, null); // 유저정보 추가 할것
         return HttpStatus.OK.value();
@@ -25,7 +25,7 @@ public class DomainApiController {
         return HttpStatus.OK.value();
     }
 
-    @PutMapping("/domain/{domainId}/update")
+    @PutMapping("/domain/{domainId}")
     public int update(@PathVariable int domainId, @RequestBody RequestDomainDto requestDomainDto){ // 세션의 유저 정보 받아 옴
         domainService.updateDomain(domainId, requestDomainDto, null); // 유저정보 추가 할것
         return HttpStatus.OK.value();
@@ -37,7 +37,7 @@ public class DomainApiController {
         return HttpStatus.OK.value();
     }
     
-    @DeleteMapping("/domain/{domainId}/delete")
+    @DeleteMapping("/domain/{domainId}")
     public int delete(@PathVariable int domainId){
         domainService.deleteDomain(domainId, null); // 유저정보 추가 할것
         return HttpStatus.OK.value();

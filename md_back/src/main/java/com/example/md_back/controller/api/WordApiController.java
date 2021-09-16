@@ -12,21 +12,21 @@ public class WordApiController {
     @Autowired
     private WordService wordService;
 
-    @PostMapping("/word/insert")
+    @PostMapping("/word")
     public int insert(@RequestBody RequestNamesDto requestNamesDto) { // 세션의 유저 정보 받아 옴
         wordService.insertWord(requestNamesDto, null); // user: principal.getUser()
         // httpStatus return
         return HttpStatus.OK.value();
     }
 
-    @PutMapping("/word/{wordId}/update")
+    @PutMapping("/word/{wordId}")
     public int update(@PathVariable int wordId, @RequestBody RequestNamesDto requestNamesDto) { // 세션의 유저 정보 받아 옴
         wordService.updateWord(wordId, requestNamesDto, null); // user: principal.getUser()
         // httpStatus return
         return HttpStatus.OK.value();
     }
 
-    @DeleteMapping("/word/{wordId}/delete")
+    @DeleteMapping("/word/{wordId}")
     public int delete(@PathVariable int wordId) {
         wordService.deleteWord(wordId, null); // user: principal.getUser()
         // httpStatus return
