@@ -39,9 +39,7 @@ public class AuthProvider implements AuthenticationProvider {
     public Authentication authenticate(String id, String password) throws org.springframework.security.core.AuthenticationException {
         List<GrantedAuthority> grantedAuthorityList = new ArrayList<GrantedAuthority>();
 
-        LoginDTO principal = new LoginDTO();
-
-        principal = (LoginDTO) userService.loadUserByUsername(id);
+        LoginDTO principal = (LoginDTO) userService.loadUserByUsername(id);
 
         System.out.println(principal);
         if(principal == null) {
