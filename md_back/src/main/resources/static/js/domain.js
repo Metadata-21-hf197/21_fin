@@ -42,7 +42,7 @@ let domain = {
 
         $.ajax({
             type: "POST",
-            url: "/domain/insert",
+            url: "/domain",
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf8",
             dataType: "json"
@@ -51,7 +51,7 @@ let domain = {
                 alert("영문명을 입력해주세요.");
                 document.getElementById("#engArea").focus();
             } else {
-                alert("단어 생성이 완료되었습니다.");
+                alert("도메인 생성이 완료되었습니다.");
                 window.location = "/domain";
             }
         }).fail(function (fail) {
@@ -72,7 +72,7 @@ let domain = {
 
         $.ajax({
             type: "PUT",
-            url: "/domain/" + id + "/update",
+            url: "/domain/" + id,
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf8",
             dataType: "json"
@@ -81,7 +81,7 @@ let domain = {
                 alert("영문명을 입력해주세요.");
                 document.getElementById("#engArea").focus();
             } else {
-                alert("단어 수정이 완료되었습니다.");
+                alert("도메인 수정이 완료되었습니다.");
                 window.location = "/domain";
             }
         }).fail(function (fail) {
@@ -93,10 +93,10 @@ let domain = {
         let id = $("#id").val();
         $.ajax({
             type: "DELETE",
-            url: "/domain/" + id + "/delete",
+            url: "/domain/" + id,
             dataType: "json"
         }).done(function (rsp) {
-            alert("단어 생성이 완료되었습니다.");
+            alert("도메인 생성이 완료되었습니다.");
             window.location = "/domain";
         }).fail(function (fail) {
                 alert(fail);
@@ -141,7 +141,7 @@ let domain = {
 
         $.ajax({
             type: "PUT",
-            url: "/domain/" + id + "/addCode/" + codeId,
+            url: "/domain/" + id + "/update/" + codeId,
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf8",
             dataType: "json"
@@ -166,7 +166,7 @@ let domain = {
             url: "/domain/" + id + "/delete/" + codeId,
             dataType: "json"
         }).done(function (rsp) {
-            alert("단어 삭제가 완료되었습니다.");
+            alert("코드 삭제가 완료되었습니다.");
             window.location = "/domain";
         }).fail(function (fail) {
                 alert(fail);

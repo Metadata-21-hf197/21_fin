@@ -1,4 +1,4 @@
-let word = {
+let term = {
     init: function () {
         $("#btn-save").on("click", () => {
             this.save();
@@ -24,11 +24,12 @@ let word = {
             korName: $("#korName").val(),
             meaning: $("#meaning").val(),
             banWord: $("#banWord").val()
+            // merge words
         };
 
         $.ajax({
             type: "POST",
-            url: "/word",
+            url: "/term",
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf8",
             dataType: "json"
@@ -37,8 +38,8 @@ let word = {
                 alert("영문명을 입력해주세요.");
                 location.href = "#engArea";
             } else {
-                alert("단어 생성이 완료되었습니다.");
-                location.href = "/word";
+                alert("용어 생성이 완료되었습니다.");
+                location.href = "/term";
             }
         }).fail(function (fail) {
                 alert(fail);
@@ -58,7 +59,7 @@ let word = {
 
         $.ajax({
             type: "PUT",
-            url: "/word/" + id,
+            url: "/term/" + id,
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf8",
             dataType: "json"
@@ -67,8 +68,8 @@ let word = {
                 alert("영문명을 입력해주세요.");
                 location.href = "#engArea";
             } else {
-                alert("단어 수정이 완료되었습니다.");
-                location.href = "/word/" + id;
+                alert("용어 수정이 완료되었습니다.");
+                location.href = "/term/" + id;
             }
         }).fail(function (fail) {
                 alert(fail);
@@ -80,10 +81,10 @@ let word = {
         let id = $("#id").val();
         $.ajax({
             type: "DELETE",
-            url: "/word/" + id,
+            url: "/term/" + id,
             dataType: "json"
         }).done(function (rsp) {
-            alert("단어 삭제가 완료되었습니다.");
+            alert("용어 삭제가 완료되었습니다.");
             location.reload();
         }).fail(function (fail) {
                 alert(fail);
@@ -95,7 +96,7 @@ let word = {
         let id = $("#id").val();
         $.ajax({
             type: "DELETE",
-            url: "/word/" + id + "/deleteDB",
+            url: "/term/" + id + "/deleteDB",
             dataType: "json"
         }).done(function (rsp) {
             alert(id + ":delete on db");
@@ -107,4 +108,4 @@ let word = {
     }
 }
 
-word.init();
+term.init();

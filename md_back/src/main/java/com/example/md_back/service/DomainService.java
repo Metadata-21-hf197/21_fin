@@ -134,9 +134,8 @@ public class DomainService {
                 .orElseThrow(() -> new IllegalArgumentException("코드 찾기 실패 : " + codeId));
     }
 
-
     @Transactional(readOnly = true)
     public List<Domain> getDomains() {
-        return domainRepository.findAll();
+        return domainRepository.getTrueDomains();
     }
 }

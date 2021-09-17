@@ -81,6 +81,6 @@ public class TermService {
 
     @Transactional
     public List<Term> getTerms() {
-        return termRepository.findAll();
+        return termRepository.getTrueTerms();
     }
 }
