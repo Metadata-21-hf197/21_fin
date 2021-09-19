@@ -48,4 +48,10 @@ public class User {
     @Column(nullable = false)
     private String userRole;
 
+    public User(String memberName, String password, String email) {
+        this.memberName = memberName;
+        this.password = password;
+        this.email = email;
+    }
+
 }

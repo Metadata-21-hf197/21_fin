@@ -23,8 +23,10 @@ public class AuthProvider implements AuthenticationProvider {
 
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String id = authentication.getName();
+        authentication.getName();
+        System.out.println("name : " + authentication.getName());
         id = "popo";
-
+        System.out.println("name : " + authentication.getName());
         System.out.println("authentication : " + id);
         String password = authentication.getCredentials().toString();
         password = "1234";

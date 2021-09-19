@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -13,6 +14,7 @@ public class UserController {
     private UserService userService;
 
     public static final String LOGINFORM = "/user/loginform";
+    public static final String JOINFORM = "/user/joinform";
 
     //login form
     @GetMapping("/user/loginform")
@@ -22,9 +24,34 @@ public class UserController {
 
     //join form
     @GetMapping("/user/join")
-    public String joinForm() {
-        return "templates/user/joinForm";
+    public String joinForm(@ModelAttribute("user") User user) {
+        return JOINFORM;
     }
+
+    @PostMapping
+    @ResponseBody
+    public Map<String, Object> insert(
+            @RequestParam("memberName") String memberName,
+            @RequestParam("password") String password,
+            @RequestParam("email") String email) { //userRole?
+        //생성자로 테스트해보고 안되면 다 풀어 작성할예정
+        User user = new User(memberName, password, email);
+        //sequence 생성해야함
+        user.setMemberId(userService.getUserNo());
+        userService.insertUser(user);
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("result", "success");
+        map.put("memberName", user.getMemberName());
+
+        System.out.println(map);
+        return map;
+
+
+
+
+    }
+
 
     /**
      * get updateForm
@@ -34,8 +61,13 @@ public class UserController {
      */
     @GetMapping("/user/update")
     public String updateForm() {
-        return "templates/user/updateForm";
+        return "/user/updateForm";
     }
+
+//    @PutMapping("/user/update")
+//    public Map<String, Object> updateUser() {
+//
+//    }
 
     /**
      * get quitForm
