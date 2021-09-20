@@ -78,6 +78,11 @@ public class WordService {
     }
 
     @Transactional(readOnly = true)
+    public List<Word> findByName(String name) {
+        return wordRepository.findByKorName(name);
+    }
+
+    @Transactional(readOnly = true)
     public List<Word> getWords() {
         return wordRepository.getTrueWords();
     }

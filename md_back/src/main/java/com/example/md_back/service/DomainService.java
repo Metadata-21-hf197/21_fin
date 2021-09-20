@@ -129,6 +129,11 @@ public class DomainService {
     }
 
     @Transactional(readOnly = true)
+    public List<Domain> findByName(String name) {
+        return domainRepository.findByKorName(name);
+    }
+
+    @Transactional(readOnly = true)
     public Code findByIdCode(int codeId) {
         return codeRepository.findById(codeId)
                 .orElseThrow(() -> new IllegalArgumentException("코드 찾기 실패 : " + codeId));

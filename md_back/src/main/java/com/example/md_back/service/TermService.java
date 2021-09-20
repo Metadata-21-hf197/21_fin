@@ -79,6 +79,9 @@ public class TermService {
         return termRepository.findByKorName(korName);
     }
 
+    @Transactional(readOnly = true)
+    public List<Term> findByName(String name) { return termRepository.findByName(name); }
+
     @Transactional
     public List<Term> getTerms() {
         return termRepository.getTrueTerms();
