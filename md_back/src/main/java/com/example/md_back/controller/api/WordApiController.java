@@ -20,23 +20,20 @@ public class WordApiController {
     private UserService userService;
 
     @PostMapping("/word")
-    public int insert(@RequestBody RequestNamesDto requestNamesDto) { // 세션의 유저 정보 받아 옴
-        wordService.insertWord(requestNamesDto, null); // user: principal.getUser()
-        // httpStatus return
+    public int insert(@RequestBody RequestNamesDto requestNamesDto, @AuthenticationPrincipal LoginDTO loginDTO) { // 세션의 유저 정보 받아 옴
+        wordService.insertWord(requestNamesDto, loginDTO.getUser());
         return HttpStatus.OK.value();
     }
 
     @PutMapping("/word/{wordId}")
-    public int update(@PathVariable int wordId, @RequestBody RequestNamesDto requestNamesDto) { // 세션의 유저 정보 받아 옴
-        wordService.updateWord(wordId, requestNamesDto, null); // user: principal.getUser()
-        // httpStatus return
+    public int update(@PathVariable int wordId, @RequestBody RequestNamesDto requestNamesDto, @AuthenticationPrincipal LoginDTO loginDTO) { // 세션의 유저 정보 받아 옴
+        wordService.updateWord(wordId, requestNamesDto, loginDTO.getUser());
         return HttpStatus.OK.value();
     }
 
     @DeleteMapping("/word/{wordId}")
-    public int delete(@PathVariable int wordId) {
-        wordService.deleteWord(wordId, null); // user: principal.getUser()
-        // httpStatus return
+    public int delete(@PathVariable int wordId, @AuthenticationPrincipal LoginDTO loginDTO) {
+        wordService.deleteWord(wordId, loginDTO.getUser());
         return HttpStatus.OK.value();
     }
 
