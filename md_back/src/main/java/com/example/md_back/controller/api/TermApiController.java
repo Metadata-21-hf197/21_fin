@@ -3,7 +3,6 @@ package com.example.md_back.controller.api;
 import com.example.md_back.dto.LoginDTO;
 import com.example.md_back.dto.RequestNamesDto;
 import com.example.md_back.service.TermService;
-import jdk.jpackage.internal.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
