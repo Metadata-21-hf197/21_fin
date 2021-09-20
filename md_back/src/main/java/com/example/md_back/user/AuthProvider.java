@@ -23,8 +23,10 @@ public class AuthProvider implements AuthenticationProvider {
 
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String id = authentication.getName();
+        authentication.getName();
+        System.out.println("name : " + authentication.getName());
         id = "popo";
-
+        System.out.println("name : " + authentication.getName());
         System.out.println("authentication : " + id);
         String password = authentication.getCredentials().toString();
         password = "1234";
@@ -39,9 +41,7 @@ public class AuthProvider implements AuthenticationProvider {
     public Authentication authenticate(String id, String password) throws org.springframework.security.core.AuthenticationException {
         List<GrantedAuthority> grantedAuthorityList = new ArrayList<GrantedAuthority>();
 
-        LoginDTO principal = new LoginDTO();
-
-        principal = (LoginDTO) userService.loadUserByUsername(id);
+        LoginDTO principal = (LoginDTO) userService.loadUserByUsername(id);
 
         System.out.println(principal);
         if(principal == null) {
