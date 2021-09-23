@@ -35,4 +35,6 @@ public class UserService implements UserServiceImpl{
         }
         return principal;
     }
+
+    public int getUserNo() { return userMapper.getUserNo();}
 }

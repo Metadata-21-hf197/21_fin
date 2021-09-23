@@ -12,4 +12,6 @@ public interface UserMapper {
     public User checkUser(User user);
 
     public User insertUser(User user);
+
+    public int getUserNo();
 }

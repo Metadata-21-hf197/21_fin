@@ -21,7 +21,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Entity
-public class User extends LoginDTO {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int memberId;
@@ -47,5 +47,11 @@ public class User extends LoginDTO {
 
     @Column(nullable = false)
     private String userRole;
+
+    public User(String memberName, String password, String email) {
+        this.memberName = memberName;
+        this.password = password;
+        this.email = email;
+    }
 
 }
