@@ -13,25 +13,12 @@ import java.util.Collection;
 
 public @Data
 class LoginDTO implements UserDetails {
-    private User user;
-    public LoginDTO(User user) {
-        this.user = user;
-    }
+    private int memberId;
+    private String memberName;
+    private String userRole;
 
-    public LoginDTO() {
-
-    }
-    public int getMemberId() {return user.getMemberId();}
-    public String getMemberName() {return user.getMemberName();}
-    public String getUserRole() {return user.getUserRole();}
-
-
-    public User getUser() {return user;}
-//    private int memberId;
-//    private String memberName;
     private String password;
 //
-//    private String userRole;
 
     private boolean isEnabled = true;
     private String username;
