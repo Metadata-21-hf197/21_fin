@@ -42,6 +42,7 @@ public class AuthProvider implements AuthenticationProvider {
         List<GrantedAuthority> grantedAuthorityList = new ArrayList<GrantedAuthority>();
 
         LoginDTO principal = (LoginDTO) userService.loadUserByUsername(id);
+        System.out.println("authenticate in : " + principal.getUsername());
 
         System.out.println(principal);
         if(principal == null) {
