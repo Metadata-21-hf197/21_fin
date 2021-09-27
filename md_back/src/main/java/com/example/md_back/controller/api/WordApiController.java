@@ -1,9 +1,13 @@
 package com.example.md_back.controller.api;
 
+import com.example.md_back.dto.LoginDTO;
 import com.example.md_back.dto.RequestNamesDto;
 import com.example.md_back.service.WordService;
+import com.example.md_back.user.MyAuthentication;
+import com.example.md_back.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,24 +16,24 @@ public class WordApiController {
     @Autowired
     private WordService wordService;
 
-    @PostMapping("/word/insert")
-    public int insert(@RequestBody RequestNamesDto requestNamesDto) { // 세션의 유저 정보 받아 옴
-        wordService.insertWord(requestNamesDto, null); // user: principal.getUser()
-        // httpStatus return
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/word")
+    public int insert(@RequestBody RequestNamesDto requestNamesDto, @AuthenticationPrincipal LoginDTO loginDTO) { // 세션의 유저 정보 받아 옴
+        wordService.insertWord(requestNamesDto, loginDTO.getUser());
         return HttpStatus.OK.value();
     }
 
-    @PutMapping("/word/{wordId}/update")
-    public int update(@PathVariable int wordId, @RequestBody RequestNamesDto requestNamesDto) { // 세션의 유저 정보 받아 옴
-        wordService.updateWord(wordId, requestNamesDto, null); // user: principal.getUser()
-        // httpStatus return
+    @PutMapping("/word/{wordId}")
+    public int update(@PathVariable int wordId, @RequestBody RequestNamesDto requestNamesDto, @AuthenticationPrincipal LoginDTO loginDTO) { // 세션의 유저 정보 받아 옴
+        wordService.updateWord(wordId, requestNamesDto, loginDTO.getUser());
         return HttpStatus.OK.value();
     }
 
-    @DeleteMapping("/word/{wordId}/delete")
-    public int delete(@PathVariable int wordId) {
-        wordService.deleteWord(wordId, null); // user: principal.getUser()
-        // httpStatus return
+    @DeleteMapping("/word/{wordId}")
+    public int delete(@PathVariable int wordId, @AuthenticationPrincipal LoginDTO loginDTO) {
+        wordService.deleteWord(wordId, loginDTO.getUser());
         return HttpStatus.OK.value();
     }
 

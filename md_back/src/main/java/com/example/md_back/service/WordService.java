@@ -62,7 +62,7 @@ public class WordService {
         return wordRepository.findById(wordId).orElseThrow(() -> new IllegalArgumentException("단어 찾기 실패 : " + wordId));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Word> findByShortName(String shortName){
         return wordRepository.findByShortName(shortName);
     }
@@ -77,10 +77,13 @@ public class WordService {
         return wordRepository.findByKorName(korName);
     }
 
-    @Transactional
-    public Word wordDetail(int wordId) {
-        // dto
-        return wordRepository.findById(wordId)
-                .orElseThrow(() -> new IllegalArgumentException("단어 조회 실패 : 단어를 찾을 수 없습니다."));
+    @Transactional(readOnly = true)
+    public List<Word> findByName(String name) {
+        return wordRepository.findByKorName(name);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Word> getWords() {
+        return wordRepository.getTrueWords();
     }
 }
