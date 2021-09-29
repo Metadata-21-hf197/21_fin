@@ -4,12 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.md_back.mappers.UserMapper">
-    <select id="getUserNo" resultType="integer">
-        SELECT USERSEQ.nextval from dual
-    </select>
     <select id="getUser" resultType="com.example.md_back.dto.LoginDTO">
         SELECT memberId as "user.memberId", memberName as "user.memberName",
-        userRole as "user.userRole", password from User where memberName=#{memberName};
+               userRole as "user.userRole", password as "user.password"
+        from User where memberName=#{memberName};
+
     </select>
     <select id="checkUser" parameterType="com.example.md_back.model.User" resultType="com.example.md_back.model.User">
         SELECT  memberId, access, email, enrollDate, memberName, quitStatus FROM User where memberName=#{memberName} and password=#{password}
