@@ -13,12 +13,20 @@ import java.util.Collection;
 
 public @Data
 class LoginDTO implements UserDetails {
-    private int memberId;
-    private String memberName;
-    private String userRole;
+    private User user;
+    public LoginDTO(User user) {
+        this.user = user;
+    }
+    public LoginDTO() { //security를 위해서 파라미터가 없는 생성자 필요함
 
-    private String password;
-//
+    }
+
+    public User getUser() {return user;}
+    public int getMemberId() {return user.getMemberId();}
+    public String getMemberName() {return user.getMemberName();}
+    public String getUserRole() {return user.getUserRole();}
+    public String getPassword() {return user.getPassword();}
+
 
     private boolean isEnabled = true;
     private String username;
