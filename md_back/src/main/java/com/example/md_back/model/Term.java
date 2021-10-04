@@ -1,5 +1,6 @@
 package com.example.md_back.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -32,8 +34,9 @@ public class Term {
     @Lob
     private String meaning;
 
-    @Column(nullable = false)
-    private boolean banWord;
+    @OneToMany(mappedBy = "term")
+    @JsonIgnoreProperties({"term"})
+    private List<TermWord> words;
 
     @Column(nullable = false)
     private boolean deleteStatus;

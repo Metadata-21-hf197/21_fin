@@ -35,12 +35,9 @@ public class Domain {
     private String meaning;
 
     @Column(nullable = false)
-    private boolean banWord;
-
-    @Column(nullable = false)
     private String type;
 
-    @OneToMany(mappedBy = "domain", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "domain")
     @JsonIgnoreProperties({"domain"})
     private List<Code> codes;
 

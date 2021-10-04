@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Word {
+public class Word implements Syn{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -33,17 +33,14 @@ public class Word {
     private String meaning;
 
     @Column(nullable = false)
-    private boolean banWord;
-
-    @Column(nullable = false)
     private boolean deleteStatus;
 
     @ManyToOne
     @JoinColumn(name="createUserId", nullable = false)
-    private User creationUser;
+    private User createUser;
 
     @CreationTimestamp
-    private Timestamp creationDate;
+    private Timestamp createDate;
 
     @ManyToOne
     @JoinColumn(name="modifyUserId")
