@@ -49,6 +49,8 @@ public class UserConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/user/login")
                 .loginProcessingUrl("/user/login")
                 .defaultSuccessUrl("/table/word") //main으로 수정
+                .successHandler(new LoginSuccessHandler())
+                .failureHandler(new LoginFailHandler())
                 .permitAll()
 
                 .and()
