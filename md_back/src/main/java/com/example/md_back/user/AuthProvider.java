@@ -23,13 +23,9 @@ public class AuthProvider implements AuthenticationProvider {
 
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String id = authentication.getName();
-        authentication.getName();
-        System.out.println("name : " + authentication.getName());
-        id = "popo";
-        System.out.println("name : " + authentication.getName());
         System.out.println("authentication : " + id);
         String password = authentication.getCredentials().toString();
-        password = "1234";
+        System.out.println("authentication : " + password);
         return authenticate(id, password);
     }
 
@@ -42,7 +38,7 @@ public class AuthProvider implements AuthenticationProvider {
         List<GrantedAuthority> grantedAuthorityList = new ArrayList<GrantedAuthority>();
 
         LoginDTO principal = (LoginDTO) userService.loadUserByUsername(id);
-        System.out.println("authenticate in : " + principal.getUsername());
+        System.out.println(principal.getUser().getMemberName());
 
         System.out.println(principal);
         if(principal == null) {
