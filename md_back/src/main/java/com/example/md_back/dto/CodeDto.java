@@ -7,19 +7,17 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class WordDto {
+public class CodeDto {
     private String shortName;
     private String engName;
     private String korName;
-    private String meaning;
 
     public Approval dtoToApproval(){
         Approval approval = new Approval();
-        approval.setWordType(WordType.WORD);
+        approval.setWordType(WordType.CODE);
         approval.setShortName(shortName);
         approval.setEngName(engName);
         approval.setKorName(korName);
-        approval.setMeaning(meaning);
         return approval;
     }
 }

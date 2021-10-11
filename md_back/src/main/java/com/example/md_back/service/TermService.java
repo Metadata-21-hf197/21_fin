@@ -1,8 +1,7 @@
 package com.example.md_back.service;
 
-import com.example.md_back.dto.RequestNamesDto;
+import com.example.md_back.model.Approval;
 import com.example.md_back.model.Term;
-import com.example.md_back.model.User;
 import com.example.md_back.repository.TermRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,40 +16,25 @@ public class TermService {
     private TermRepository termRepository;
 
     @Transactional
-    public void insertTerm(RequestNamesDto requestNamesDto, User user) {
-        Term term = Term.builder()
-                .shortName(requestNamesDto.getShortName())
-                .engName(requestNamesDto.getEngName())
-                .korName(requestNamesDto.getKorName())
-                .banWord(requestNamesDto.isBanWord())
-                .meaning(requestNamesDto.getMeaning())
-                .creationUser(user)
-                .deleteStatus(false)
-                // word - term relation
-                .build();
+    public void insertTerm(Approval approval) {
+        Term term = new Term();
+        term.approvalToTerm(approval);
         termRepository.save(term);
     }
 
     @Transactional
-    public void updateTerm(int termId, RequestNamesDto requestNamesDto, User user) {
-        Term term = termRepository.findById(termId)
+    public void updateTerm(Approval approval) {
+        Term term = termRepository.findById(approval.getTargetId())
                 .orElseThrow(() -> new IllegalArgumentException("용어 수정 실패 : 용어를 찾을 수 없습니다."));
-        term.setShortName(requestNamesDto.getShortName());
-        term.setEngName(requestNamesDto.getEngName());
-        term.setKorName(requestNamesDto.getKorName());
-        // word - term relation
-        term.setMeaning(requestNamesDto.getMeaning());
-        term.setBanWord(requestNamesDto.isBanWord());
-        term.setModifyUser(user);
+        term.approvalToTerm(approval);
         termRepository.save(term);
     }
 
     @Transactional
-    public void deleteTerm(int termId, User user) {
-        Term term = termRepository.findById(termId)
+    public void deleteTerm(Approval approval) {
+        Term term = termRepository.findById(approval.getTargetId())
                 .orElseThrow(() -> new IllegalArgumentException("용어 삭제 실패 : 용어를 찾을 수 없습니다."));
-        term.setDeleteStatus(true);
-        term.setModifyUser(user);
+        term.approvalToTerm(approval);
         termRepository.save(term);
     }
 
@@ -84,6 +68,6 @@ public class TermService {
 
     @Transactional
     public List<Term> getTerms() {
-        return termRepository.getTrueTerms();
+        return termRepository.getTerms();
     }
 }
