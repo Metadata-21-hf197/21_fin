@@ -14,7 +14,7 @@
         SELECT  memberId, access, email, enrollDate, memberName, quitStatus FROM User where memberName=#{memberName} and password=#{password}
     </select>
     <insert id="insertUser" parameterType="com.example.md_back.model.User">
-        INSERT INTO User(memberId, memberName, password, email, enrollDate, userRole)
-        VALUES (#{memberId}, #{memberName}, #{password}, #{email}, SYSDATE, 'ADMIN')
+        INSERT INTO User(memberName, password, email, enrollDate, userRole)
+        VALUES ( #{user.memberName}, #{user.password}, #{user.email}, SYSDATE, #{userRole})
     </insert>
 </mapper>

@@ -89,13 +89,25 @@ public class UserController {
     @Transactional
     @PostMapping("/user/join")
     @ResponseBody
-    public Map<String, Object> insert(User user) {
+    public Map<String, Object> insert(@RequestParam String memberName,
+                                      @RequestParam String password,
+                                      @RequestParam String email,
+                                      @RequestParam String userRole) {
         // String rawPassword = user.getPassword();
         // String encPassword = bCryptPasswordEncoder.encode(rawPassword);
         // user.setMemberName(encPassword);
+        User user = new User();
+        user.setMemberName(memberName);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setUserRole(userRole);
         userService.insertUser(user);
         //return result
-        return null;
+
+        Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("result", "success");
+
+        return returnMap;
     }
 
     /**
