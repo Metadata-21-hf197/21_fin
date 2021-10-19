@@ -37,7 +37,6 @@ public class UserController {
         //생성자로 테스트해보고 안되면 다 풀어 작성할예정
         User user = new User(memberName, password, email);
         //sequence 생성해야함
-        user.setMemberId(userService.getUserNo());
         userService.insertUser(user);
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -89,10 +88,10 @@ public class UserController {
     @Transactional
     @PostMapping("/user/join")
     @ResponseBody
-    public Map<String, Object> insert(@RequestParam String memberName,
-                                      @RequestParam String password,
-                                      @RequestParam String email,
-                                      @RequestParam String userRole) {
+    public Map<String, Object> insert(@RequestParam("memberName") String memberName,
+                                      @RequestParam("password") String password,
+                                      @RequestParam("email") String email,
+                                      @RequestParam("userRole") String userRole) {
         // String rawPassword = user.getPassword();
         // String encPassword = bCryptPasswordEncoder.encode(rawPassword);
         // user.setMemberName(encPassword);
