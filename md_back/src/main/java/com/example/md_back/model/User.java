@@ -1,5 +1,6 @@
 package com.example.md_back.model;
 
+import com.example.md_back.dto.LoginDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +21,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Entity
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int memberId;
@@ -45,15 +46,12 @@ public class User implements UserDetails {
     private boolean quitStatus;
 
     @Column(nullable = false)
-    private String access;
-
     private String userRole;
 
-    private boolean isEnabled = true;
-    private String username;
-    private boolean isCredentialsNonExpired = true;
-    private boolean isAccountNonExpired  = true;
-    private boolean isAccountNonLocked  = true;
+    public User(String memberName, String password, String email) {
+        this.memberName = memberName;
+        this.password = password;
+        this.email = email;
+    }
 
-    private Collection<? extends GrantedAuthority> authorities;
 }

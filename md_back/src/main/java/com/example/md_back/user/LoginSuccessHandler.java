@@ -14,6 +14,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
+        System.out.println("login Success in");
+        System.out.println("success : " + authentication.getName());
         //return에 맞게 수정 필요
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
