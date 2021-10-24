@@ -13,9 +13,9 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
 
     List<Word> findByShortName(String shortName);
 
-    @Query(value = "SELECT * FROM Word WHERE korName = name OR engName = name OR shortName = name", nativeQuery = true)
+    @Query(value = "SELECT * FROM Word WHERE korName = name OR engName = name OR shortName = name AND deleteStatus = FALSE", nativeQuery = true)
     List<Word> findByName(String name);
 
-    @Query(value = "SELECT * FROM Word WHERE banWord = FALSE", nativeQuery = true)
-    List<Word> getTrueWords();
+    @Query(value = "SELECT * FROM Word WHERE deleteStatus = FALSE", nativeQuery = true)
+    List<Word> getWords();
 }

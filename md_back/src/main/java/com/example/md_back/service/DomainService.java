@@ -1,10 +1,6 @@
 package com.example.md_back.service;
 
-import com.example.md_back.dto.RequestDomainDto;
-import com.example.md_back.dto.RequestNamesDto;
-import com.example.md_back.model.Code;
-import com.example.md_back.model.Domain;
-import com.example.md_back.model.User;
+import com.example.md_back.model.*;
 import com.example.md_back.repository.CodeRepository;
 import com.example.md_back.repository.DomainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,40 +19,25 @@ public class DomainService {
     private CodeRepository codeRepository;
 
     @Transactional
-    public void insertDomain(RequestDomainDto requestDomainDto, User user) {
-        Domain domain = Domain.builder()
-                .shortName(requestDomainDto.getShortName())
-                .engName(requestDomainDto.getEngName())
-                .korName(requestDomainDto.getKorName())
-                .banWord(requestDomainDto.isBanWord())
-                .type(requestDomainDto.getType())
-                .meaning(requestDomainDto.getMeaning())
-                .creationUser(user)
-                .deleteStatus(false)
-                .build();
+    public void insertDomain(Approval approval) {
+        Domain domain = new Domain();
+        domain.approvalToDomain(approval);
         domainRepository.save(domain);
     }
 
     @Transactional
-    public void updateDomain(int domainId, RequestDomainDto requestDomainDto, User user) {
-        Domain domain = domainRepository.findById(domainId)
+    public void updateDomain(Approval approval) {
+        Domain domain = domainRepository.findById(approval.getTargetId())
                 .orElseThrow(() -> new IllegalArgumentException("도메인 수정 실패 : 도메인을 찾을 수 없습니다."));
-        domain.setShortName(requestDomainDto.getShortName());
-        domain.setEngName(requestDomainDto.getEngName());
-        domain.setKorName(requestDomainDto.getKorName());
-        domain.setMeaning(requestDomainDto.getMeaning());
-        domain.setType(requestDomainDto.getType());
-        domain.setBanWord(requestDomainDto.isBanWord());
-        domain.setModifyUser(user);
+        domain.approvalToDomain(approval);
         domainRepository.save(domain);
     }
 
     @Transactional
-    public void deleteDomain(int domainId, User user) {
-        Domain domain = domainRepository.findById(domainId)
+    public void deleteDomain(Approval approval) {
+        Domain domain = domainRepository.findById(approval.getTargetId())
                 .orElseThrow(() -> new IllegalArgumentException("도메인 삭제 실패 : 도메인을 찾을 수 없습니다."));
-        domain.setDeleteStatus(true);
-        domain.setModifyUser(user);
+        domain.approvalToDomain(approval);
         domainRepository.save(domain);
     }
 
@@ -66,44 +47,41 @@ public class DomainService {
     }
 
     @Transactional
-    public void addCode(int domainId, RequestNamesDto requestNamesDto, User user) {
-        Domain domain = domainRepository.findById(domainId)
+    public void addCode(Approval approval) {
+        Domain domain = domainRepository.findById(approval.getSlaveId())
                 .orElseThrow(() -> new IllegalArgumentException("코드 추가 실패 : 도메인을 찾을 수 없습니다."));
         //if(domain.getCodes().contains(requestNamesDto.getEngName())) {
         //  return new IllegalArgumentException("코드 추가 실패 : 이미 존재하는 코드입니다.");
         //}
-        Code code = Code.builder()
-                .shortName(requestNamesDto.getShortName())
-                .engName(requestNamesDto.getEngName())
-                .korName(requestNamesDto.getKorName())
-                .domain(domain)
-                .build();
+        Code code = new Code();
+        code.approvalToCode(approval);
         codeRepository.save(code);
-        domain.setModifyUser(user);
+        domain.setModifyUser(approval.getCreateUser());
+        domain.setModifyDate(approval.getCreateDate());
         domainRepository.save(domain);
     }
 
     @Transactional
-    public void updateCode(int domainId, int codeId, RequestNamesDto requestNamesDto, User user) {
-        Domain domain = domainRepository.findById(domainId)
+    public void updateCode(Approval approval) {
+        Domain domain = domainRepository.findById(approval.getSlaveId())
                 .orElseThrow(() -> new IllegalArgumentException("코드 수정 실패 : 도메인을 찾을 수 없습니다."));
 
-        Code code = codeRepository.findById(codeId)
+        Code code = codeRepository.findById(approval.getTargetId())
                 .orElseThrow(() -> new IllegalArgumentException("코드 수정 실패 : 코드를 찾을 수 없습니다."));
-        code.setShortName(requestNamesDto.getShortName());
-        code.setEngName(requestNamesDto.getEngName());
-        code.setKorName(requestNamesDto.getKorName());
-        domain.setModifyUser(user);
+        code.approvalToCode(approval);
+        domain.setModifyUser(approval.getCreateUser());
+        domain.setModifyDate(approval.getCreateDate());
         codeRepository.save(code);
         domainRepository.save(domain);
     }
 
     @Transactional
-    public void deleteCode(int domainId, int codeId, User user) {
-        Domain domain = domainRepository.findById(domainId)
+    public void deleteCode(Approval approval) {
+        Domain domain = domainRepository.findById(approval.getSlaveId())
                 .orElseThrow(() -> new IllegalArgumentException("코드 삭제 실패 : 도메인을 찾을 수 없습니다."));
-        domain.setModifyUser(user);
-        codeRepository.deleteById(codeId);
+        domain.setModifyUser(approval.getCreateUser());
+        domain.setModifyDate(approval.getCreateDate());
+        codeRepository.deleteById(approval.getTargetId());
         domainRepository.save(domain);
     }
 
@@ -141,6 +119,6 @@ public class DomainService {
 
     @Transactional(readOnly = true)
     public List<Domain> getDomains() {
-        return domainRepository.getTrueDomains();
+        return domainRepository.getDomains();
     }
 }

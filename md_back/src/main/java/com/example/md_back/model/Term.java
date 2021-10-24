@@ -1,5 +1,6 @@
 package com.example.md_back.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -32,23 +34,52 @@ public class Term {
     @Lob
     private String meaning;
 
-    @Column(nullable = false)
-    private boolean banWord;
+    @OneToMany(mappedBy = "term")
+    @JsonIgnoreProperties({"term"})
+    private List<TermWord> words;
 
     @Column(nullable = false)
     private boolean deleteStatus;
 
     @ManyToOne
-    @JoinColumn(name="createUserId", nullable = false)
-    private User creationUser;
+    @JoinColumn(name = "createUserId", nullable = false)
+    private User createUser;
 
     @CreationTimestamp
-    private Timestamp creationDate;
+    private Timestamp createDate;
 
     @ManyToOne
-    @JoinColumn(name="modifyUserId")
+    @JoinColumn(name = "modifyUserId")
     private User modifyUser;
 
     @UpdateTimestamp
     private Timestamp modifyDate;
+
+    public void approvalToTerm(Approval approval) {
+        if (approval.getSlaveId() == 0) {
+            if (approval.getShortName() != null)
+                shortName = approval.getShortName();
+            if (approval.getEngName() != null)
+                engName = approval.getEngName();
+            if (approval.getKorName() != null)
+                korName = approval.getKorName();
+            if (approval.getMeaning() != null)
+                meaning = approval.getMeaning();
+        } else if (approval.getSlaveId() > 0) {
+            // slaveID isExist then ~ TermWord
+            // name fields is null
+            System.out.println(1);
+        }
+        if (approval.getApprovalType() == ApprovalType.DELETE) {
+            deleteStatus = true;
+        } else if (approval.getApprovalType() == ApprovalType.CREATE) {
+            createUser = approval.getCreateUser();
+            createDate = approval.getCreateDate();
+            deleteStatus = false;
+        } else {
+            modifyUser = approval.getCreateUser();
+            modifyDate = approval.getCreateDate();
+        }
+    }
+
 }
