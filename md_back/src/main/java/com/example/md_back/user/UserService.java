@@ -18,6 +18,7 @@ public class UserService implements UserServiceImpl{
     @Autowired
     private UserMapper userMapper;
 
+
     public LoginDTO getUser(String memberName) { return userMapper.getUser(memberName);}
 
     public User checkUser(User user) { return userMapper.checkUser(user);}

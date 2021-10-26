@@ -1,17 +1,32 @@
 package com.example.md_back.user;
 
+import com.example.md_back.model.Approval;
+import com.example.md_back.model.Term;
 import com.example.md_back.model.User;
+import com.example.md_back.model.Word;
+import com.example.md_back.service.ApprovalService;
+import com.example.md_back.service.TermService;
+import com.example.md_back.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private WordService wordService;
+    @Autowired
+    private TermService termService;
+    @Autowired
+    private ApprovalService approvalService;
 
     public static final String LOGINFORM = "/user/loginform";
     public static final String JOINFORM = "/user/joinform";
@@ -109,27 +124,36 @@ public class UserController {
         return returnMap;
     }
 
-    /**
-     * userUpdate
-     *
-     * @param user
-     * @return
-     */
-    @Transactional
-    @PutMapping("/user/update")
+    @GetMapping("/mypage")
     @ResponseBody
-    public Map<String, Object> update(User user) {
-//        User updateUser = userService.getUser(user.getMemberName());
-        // updateUser Exceptions~
+    public Map<String, Object> userWordList() throws Exception {
+        User user = new User();
+        List<Word> wordList = new ArrayList<>();
+        List<Term> termList = new ArrayList<>();
+        List<Approval> approvalList = new ArrayList<>();
 
-        // String rawPassword = user.getPassword();
-        // String encPassword = bCryptPasswordEncoder.encode(rawPassword);
-//        updateUser.setEmail(user.getEmail());
+        if(!SecurityContextHolder.getContext().getAuthentication().getName().equals("ADMIN")) {
+            MyAuthentication authentication = (MyAuthentication) SecurityContextHolder.getContext().getAuthentication();
+            user = (User) authentication.principal.getUser();
 
-        // 세션 업데이트 부분
-        // Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        // SecurityContextHolder.getContext().setAuthentication(authentication);
-        return null;
+            System.out.println(user.getMemberName());
+            String username = user.getMemberName();
+            wordList = wordService.findByName(username);
+            termList = termService.findByName(username);
+
+            //미구현됨
+            //approvalList = approavlService.findByName(username);
+
+
+        }
+
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("wordList", wordList);
+        map.put("termList", termList);
+        map.put("approvalList", approvalList);
+        return map;
+
     }
 
     /**
