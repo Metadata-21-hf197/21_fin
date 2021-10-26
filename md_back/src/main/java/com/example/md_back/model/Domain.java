@@ -34,13 +34,7 @@ public class Domain {
     @Lob
     private String meaning;
 
-    @Column(nullable = false)
-    private boolean banWord;
-
-    @Column(nullable = false)
-    private String type;
-
-    @OneToMany(mappedBy = "domain", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "domain")
     @JsonIgnoreProperties({"domain"})
     private List<Code> codes;
 
@@ -49,10 +43,10 @@ public class Domain {
 
     @ManyToOne
     @JoinColumn(name="createUserId", nullable = false)
-    private User creationUser;
+    private User createUser;
 
     @CreationTimestamp
-    private Timestamp creationDate;
+    private Timestamp createDate;
 
     @ManyToOne
     @JoinColumn(name="modifyUserId")
@@ -60,4 +54,26 @@ public class Domain {
 
     @UpdateTimestamp
     private Timestamp modifyDate;
+
+    public void approvalToDomain(Approval approval) {
+        if (approval.getShortName() != null)
+            shortName = approval.getShortName();
+        if (approval.getEngName() != null)
+            engName = approval.getEngName();
+        if (approval.getKorName() != null)
+            korName = approval.getKorName();
+        if (approval.getMeaning() != null)
+            meaning = approval.getMeaning();
+        if (approval.getApprovalType() == ApprovalType.DELETE) {
+            deleteStatus = true;
+        } else if (approval.getApprovalType() == ApprovalType.CREATE) {
+            createUser = approval.getCreateUser();
+            createDate = approval.getCreateDate();
+            deleteStatus = false;
+        } else {
+            modifyUser = approval.getCreateUser();
+            modifyDate = approval.getCreateDate();
+        }
+    }
+
 }

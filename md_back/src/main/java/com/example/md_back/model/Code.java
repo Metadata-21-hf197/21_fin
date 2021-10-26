@@ -29,4 +29,16 @@ public class Code {
     @ManyToOne
     @JoinColumn(name="domainId", nullable = false)
     private Domain domain;
+
+    public void approvalToCode(Approval approval) {
+        if (approval.getSlaveId() > 0) { // id != null and id !=0
+            if (approval.getShortName() != null)
+                shortName = approval.getShortName();
+            if (approval.getEngName() != null)
+                engName = approval.getEngName();
+            if (approval.getKorName() != null)
+                korName = approval.getKorName();
+            // domain update Code
+        }
+    }
 }

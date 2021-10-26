@@ -1,7 +1,7 @@
 package com.example.md_back.service;
 
-import com.example.md_back.dto.RequestNamesDto;
-import com.example.md_back.model.User;
+
+import com.example.md_back.model.Approval;
 import com.example.md_back.model.Word;
 import com.example.md_back.repository.WordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,38 +17,25 @@ public class WordService {
     private WordRepository wordRepository;
 
     @Transactional
-    public void insertWord(RequestNamesDto requestNamesDto, User user) {
-        Word word = Word.builder()
-                .shortName(requestNamesDto.getShortName())
-                .engName(requestNamesDto.getEngName())
-                .korName(requestNamesDto.getKorName())
-                .banWord(requestNamesDto.isBanWord())
-                .meaning(requestNamesDto.getMeaning())
-                .creationUser(user)
-                .deleteStatus(false)
-                .build();
+    public void insertWord(Approval approval) {
+        Word word = new Word();
+        word.approvalToWord(approval);
         wordRepository.save(word);
     }
 
     @Transactional
-    public void updateWord(int wordId, RequestNamesDto requestNamesDto, User user) {
-        Word word = wordRepository.findById(wordId)
+    public void updateWord(Approval approval) {
+        Word word = wordRepository.findById(approval.getTargetId())
                 .orElseThrow(() -> new IllegalArgumentException("단어 수정 실패 : 단어를 찾을 수 없습니다."));
-        word.setShortName(requestNamesDto.getShortName());
-        word.setEngName(requestNamesDto.getEngName());
-        word.setKorName(requestNamesDto.getKorName());
-        word.setMeaning(requestNamesDto.getMeaning());
-        word.setBanWord(requestNamesDto.isBanWord());
-        word.setModifyUser(user);
+        word.approvalToWord(approval);
         wordRepository.save(word);
     }
 
     @Transactional
-    public void deleteWord(int wordId, User user) {
-        Word word = wordRepository.findById(wordId)
+    public void deleteWord(Approval approval) {
+        Word word = wordRepository.findById(approval.getTargetId())
                 .orElseThrow(() -> new IllegalArgumentException("단어 삭제 실패 : 단어를 찾을 수 없습니다."));
-        word.setDeleteStatus(true);
-        word.setModifyUser(user);
+        word.approvalToWord(approval);
         wordRepository.save(word);
     }
 
@@ -79,11 +66,11 @@ public class WordService {
 
     @Transactional(readOnly = true)
     public List<Word> findByName(String name) {
-        return wordRepository.findByKorName(name);
+        return wordRepository.findByName(name);
     }
 
     @Transactional(readOnly = true)
     public List<Word> getWords() {
-        return wordRepository.getTrueWords();
+        return wordRepository.getWords();
     }
 }
