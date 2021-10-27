@@ -1,5 +1,6 @@
 package com.example.md_back.service;
 
+import com.example.md_back.mappers.TermMapper;
 import com.example.md_back.model.Approval;
 import com.example.md_back.model.Term;
 import com.example.md_back.repository.TermRepository;
@@ -14,6 +15,8 @@ public class TermService {
 
     @Autowired
     private TermRepository termRepository;
+    @Autowired
+    private TermMapper termMapper;
 
     @Transactional
     public void insertTerm(Approval approval) {
@@ -70,4 +73,6 @@ public class TermService {
     public List<Term> getTerms() {
         return termRepository.getTerms();
     }
+
+    public List<Term> getTermListByUserId(int userId) {return termMapper.getTermListByUserId(userId); }
 }

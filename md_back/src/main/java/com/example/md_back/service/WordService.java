@@ -1,6 +1,7 @@
 package com.example.md_back.service;
 
 
+import com.example.md_back.mappers.WordMapper;
 import com.example.md_back.model.Approval;
 import com.example.md_back.model.Word;
 import com.example.md_back.repository.WordRepository;
@@ -15,6 +16,9 @@ public class WordService {
 
     @Autowired
     private WordRepository wordRepository;
+
+    @Autowired
+    private WordMapper wordMapper;
 
     @Transactional
     public void insertWord(Approval approval) {
@@ -73,4 +77,6 @@ public class WordService {
     public List<Word> getWords() {
         return wordRepository.getWords();
     }
+
+    public List<Word> getWordListByUserId(int userId) {return wordMapper.getWordListByUserId(userId); }
 }

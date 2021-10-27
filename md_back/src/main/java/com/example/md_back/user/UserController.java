@@ -127,31 +127,26 @@ public class UserController {
     @GetMapping("/mypage")
     @ResponseBody
     public Map<String, Object> userWordList() throws Exception {
+        System.out.println("wordList in");
         User user = new User();
         List<Word> wordList = new ArrayList<>();
         List<Term> termList = new ArrayList<>();
         List<Approval> approvalList = new ArrayList<>();
 
-        if(!SecurityContextHolder.getContext().getAuthentication().getName().equals("ADMIN")) {
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+        if(!SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("ADMIN")) {
             MyAuthentication authentication = (MyAuthentication) SecurityContextHolder.getContext().getAuthentication();
             user = (User) authentication.principal.getUser();
 
             System.out.println(user.getMemberName());
-            String username = user.getMemberName();
-            wordList = wordService.findByName(username);
-            termList = termService.findByName(username);
-
-            //미구현됨
-            //approvalList = approavlService.findByName(username);
-
-
+            int userId = user.getMemberId();
+            wordList = wordService.getWordListByUserId(userId);
+            termList = termService.getTermListByUserId(userId);
+            approvalList = approvalService.getApprovalListByUserId(userId);
         }
-
-
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("wordList", wordList);
         map.put("termList", termList);
-        map.put("approvalList", approvalList);
         return map;
 
     }

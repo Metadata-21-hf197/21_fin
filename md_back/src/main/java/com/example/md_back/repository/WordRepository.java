@@ -1,10 +1,12 @@
 package com.example.md_back.repository;
 
 import com.example.md_back.model.Word;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+
 
 public interface WordRepository extends JpaRepository<Word, Integer> {
     List<Word> findByEngName(String engName);
@@ -18,4 +20,6 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
 
     @Query(value = "SELECT * FROM Word WHERE deleteStatus = FALSE", nativeQuery = true)
     List<Word> getWords();
+
+
 }

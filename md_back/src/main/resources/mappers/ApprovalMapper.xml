@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.md_back.mappers.ApprovalMapper">
+    <select id="getApprovalListByUserId" resultType="com.example.md_back.model.Approval">
+        SELECT *
+        FROM Approval
+        WHERE createUserId=#{userId}
+           OR modifyUserId=#{userId}
+    </select>
+</mapper>

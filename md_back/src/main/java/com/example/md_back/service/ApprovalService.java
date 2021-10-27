@@ -1,6 +1,7 @@
 package com.example.md_back.service;
 
 
+import com.example.md_back.mappers.ApprovalMapper;
 import com.example.md_back.model.Approval;
 import com.example.md_back.model.User;
 import com.example.md_back.repository.ApprovalRepository;
@@ -15,6 +16,8 @@ public class ApprovalService {
 
     @Autowired
     private ApprovalRepository approvalRepository;
+    @Autowired
+    private ApprovalMapper approvalMapper;
 
     @Transactional
     public void insert(Approval approval) {
@@ -58,4 +61,6 @@ public class ApprovalService {
         approvalRepository.save(found);
         return found;
     }
+
+    public List<Approval> getApprovalListByUserId(int userId) { return approvalMapper.getApprovalListByUserId(userId);}
 }
