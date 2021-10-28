@@ -110,7 +110,7 @@ public class TermService {
         return approval;
     }
 
-    public Approval dtoToApproval(User user, int targetId){ // DELETE
+    public Approval dtoToApproval(User user, int targetId) { // DELETE
         Approval approval = new Approval();
         approval.setCreateUser(user);
         approval.setTargetId(targetId);
@@ -119,6 +119,7 @@ public class TermService {
         // headers
         return approval;
     }
+
     @Transactional
     public void deleteTermDB(int termId) {
         termRepository.deleteById(termId);
@@ -147,6 +148,11 @@ public class TermService {
     @Transactional(readOnly = true)
     public List<Term> findByName(String name) {
         return termRepository.findByName(name);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Term> getTermListByUserId(int userId) {
+        return termRepository.findByCreateUserOrModifyUser(userId);
     }
 
     @Transactional

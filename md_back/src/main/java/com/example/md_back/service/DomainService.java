@@ -231,6 +231,11 @@ public class DomainService {
     }
 
     @Transactional(readOnly = true)
+    public List<Domain> getDomainListByUserid(int userId){
+        return domainRepository.findByCreateUserOrModifyUser(userId);
+    }
+
+    @Transactional(readOnly = true)
     public List<Domain> getDomains() {
         return domainRepository.getDomains();
     }

@@ -122,6 +122,11 @@ public class WordService {
     }
 
     @Transactional(readOnly = true)
+    public List<Word> getWordListByUserId(int userId){
+        return wordRepository.findByCreateUserOrModifyUser(userId);
+    }
+
+    @Transactional(readOnly = true)
     public List<Word> getWords() {
         return wordRepository.getWords();
     }

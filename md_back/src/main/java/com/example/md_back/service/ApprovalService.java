@@ -58,4 +58,15 @@ public class ApprovalService {
         approvalRepository.save(found);
         return found;
     }
+
+    @Transactional(readOnly = true)
+    public List<Approval> getApprovalListByUserId(int userId){
+        return approvalRepository.findByCreateUser(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Approval> getApprovalConfirmListByUser(int userId){
+        return approvalRepository.findByCreateUser(userId);
+    }
+
 }
