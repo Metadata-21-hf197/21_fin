@@ -13,9 +13,13 @@ public interface DomainRepository extends JpaRepository<Domain, Integer> {
 
     List<Domain> findByKorName(String korName);
 
-    @Query(value = "SELECT * FROM Domain WHERE korName = name OR engName = name OR shortName = name AND deleteStatus = FALSE", nativeQuery = true)
+    @Query(value = "SELECT * FROM Domain WHERE korName = ?1 OR engName = ?1 OR shortName = ?1 AND deleteStatus = FALSE", nativeQuery = true)
     List<Domain> findByName(String name);
 
     @Query(value = "SELECT * FROM Domain WHERE deleteStatus = FALSE", nativeQuery = true)
     List<Domain> getDomains();
+
+    @Query(value = "SELECT * FROM Domain WHERE createUser = ?1 OR modifyUser = ?1", nativeQuery = true)
+    List<Domain> findByCreateUserOrModifyUser(int userId);
+
 }
