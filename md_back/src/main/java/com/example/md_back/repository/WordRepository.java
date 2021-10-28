@@ -20,6 +20,6 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     @Query(value = "SELECT * FROM Word WHERE deleteStatus = FALSE", nativeQuery = true)
     List<Word> getWords();
 
-    @Query(value = "SELECT * FROM Word WHERE createUser = ?1 OR modifyUser = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM Word WHERE createUserId = :#{#userId} OR modifyUserId = :#{#userId}", nativeQuery = true)
     List<Word> findByCreateUserOrModifyUser(int userId);
 }
