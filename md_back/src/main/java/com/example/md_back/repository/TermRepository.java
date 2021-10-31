@@ -20,5 +20,5 @@ public interface TermRepository extends JpaRepository<Term, Integer> {
     List<Term> getTerms();
 
     @Query(value = "SELECT * FROM Term WHERE createUserId = :#{#userId} OR modifyUserId = :#{#userId}", nativeQuery = true)
-    List<Term> findByCreateUserOrModifyUser(int UserId);
+    List<Term> findByCreateUserOrModifyUser(int userId);
 }
