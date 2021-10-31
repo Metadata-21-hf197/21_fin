@@ -147,6 +147,7 @@ public class UserController {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("wordList", wordList);
         map.put("termList", termList);
+        map.put("approvalList", approvalList);
         return map;
 
     }
