@@ -9,17 +9,13 @@ import javax.persistence.*;
 public class BanWord {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(nullable = false)
     private String name;
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public void setName(String name){
+    public BanWord(String name) {
         this.name = name;
     }
 }

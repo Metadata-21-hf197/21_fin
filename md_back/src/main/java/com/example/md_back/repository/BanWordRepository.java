@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BanWordRepository extends JpaRepository<BanWord, Integer> {
     BanWord findByName(String name);
+    BanWord deleteByName(String name);
 }
