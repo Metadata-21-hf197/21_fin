@@ -25,7 +25,8 @@ public class BanWordController {
     @PostMapping("/banword/valid")
     private String search(Model model, @RequestBody List<String> names){
         model.addAttribute("banWord", banWordService.isValid(names));
-        return "/banword";
+        // keep uri, just check
+        return "";
     }
 
     @GetMapping("/banword/insert")

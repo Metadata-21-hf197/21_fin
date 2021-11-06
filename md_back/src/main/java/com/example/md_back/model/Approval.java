@@ -22,6 +22,9 @@ public class Approval {
     private ApprovalType approvalType;
 
     @Column(nullable = false)
+    private ApprovalStatus approvalStatus;
+
+    @Column(nullable = false)
     private WordType wordType;
 
     @Column(nullable = false)
@@ -46,7 +49,7 @@ public class Approval {
     @JoinColumn(name = "createUserId", nullable = false)
     private User createUser;
 
-    @CreationTimestamp
+    @Column(nullable = false)
     private Timestamp createDate;
 
     @ManyToOne
@@ -56,7 +59,7 @@ public class Approval {
     @Column
     private Timestamp confirmDate;
 
-    public boolean isConfirmed(){
-        return confirmUser != null;
+    public boolean isConfirmed() {
+        return approvalStatus != ApprovalStatus.Pending;
     }
 }

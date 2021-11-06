@@ -2,8 +2,8 @@ package com.example.md_back.service;
 
 
 import com.example.md_back.dto.WordDto;
+import com.example.md_back.mappers.WordMapper;
 import com.example.md_back.model.*;
-import com.example.md_back.repository.WordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,34 +15,45 @@ import java.util.Objects;
 public class WordService {
 
     @Autowired
-    private WordRepository wordRepository;
+    private WordMapper wordMapper;
 
     @Transactional
     public void insertWord(Approval approval) {
         Word word = new Word();
         word.approvalToWord(approval);
-        wordRepository.save(word);
+        wordMapper.insertWord(word);
     }
 
     @Transactional
     public void updateWord(Approval approval) {
-        Word word = wordRepository.findById(approval.getTargetId())
-                .orElseThrow(() -> new IllegalArgumentException("단어 수정 실패 : 단어를 찾을 수 없습니다."));
+        Word word = wordMapper.getWordById(approval.getTargetId());
+        if(word  == null){
+            System.out.println("단어 수정 실패 : 단어를 찾을 수 없습니다.");
+            return;
+        }
         word.approvalToWord(approval);
-        wordRepository.save(word);
+        wordMapper.updateWord(word);
     }
 
     @Transactional
     public void deleteWord(Approval approval) {
-        Word word = wordRepository.findById(approval.getTargetId())
-                .orElseThrow(() -> new IllegalArgumentException("단어 삭제 실패 : 단어를 찾을 수 없습니다."));
+        Word word = wordMapper.getWordById(approval.getTargetId());
+        if(word == null){
+            System.out.println("단어 삭제 실패 : 이미 삭제된 단어입니다.");
+            return;
+        }
         word.approvalToWord(approval);
-        wordRepository.save(word);
+        wordMapper.deleteWord(word);
+        // change deleteStatus True
     }
 
+
     public Approval dtoToApproval(User user, WordDto wordDto, int targetId) {  // UPDATE
-        Word word = wordRepository.findById(targetId)
-                .orElseThrow(() -> new IllegalArgumentException("결재 추가 실패 : 단어를 찾을 수 없습니다."));
+        Word word = wordMapper.getWordById(targetId);
+        if(word == null) {
+            System.out.println("결재 추가 실패 : 단어를 찾을 수 없습니다.");
+            return null;
+        }
         Approval approval = new Approval();
         approval.setCreateUser(user);
         approval.setTargetId(targetId);
@@ -82,6 +93,10 @@ public class WordService {
     }
 
     public Approval dtoToApproval(User user, int targetId) { // DELETE
+        if(wordMapper.getWordById(targetId) == null){
+            System.out.println("이미 삭제된 단어입니다");
+            return null;
+        }
         Approval approval = new Approval();
         approval.setCreateUser(user);
         approval.setTargetId(targetId);
@@ -93,41 +108,26 @@ public class WordService {
 
     @Transactional
     public void deleteWordDB(int wordId) {
-        wordRepository.deleteById(wordId);
+        wordMapper.deleteWordDB(wordId);
     }
 
     @Transactional(readOnly = true)
     public Word findById(int wordId) {
-        return wordRepository.findById(wordId).orElseThrow(() -> new IllegalArgumentException("단어 찾기 실패 : " + wordId));
-    }
-
-    @Transactional(readOnly = true)
-    public List<Word> findByShortName(String shortName) {
-        return wordRepository.findByShortName(shortName);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Word> findByEngName(String engName) {
-        return wordRepository.findByEngName(engName);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Word> findByKorName(String korName) {
-        return wordRepository.findByKorName(korName);
+        return wordMapper.getWordById(wordId);
     }
 
     @Transactional(readOnly = true)
     public List<Word> findByName(String name) {
-        return wordRepository.findByName(name);
+        return wordMapper.getWordsByName(name);
     }
 
     @Transactional(readOnly = true)
-    public List<Word> getWordListByUserId(int userId){
-        return wordRepository.findByCreateUserOrModifyUser(userId);
+    public List<Word> getWordListByUser(int userId){
+        return wordMapper.getWordsByUserId(userId);
     }
 
     @Transactional(readOnly = true)
     public List<Word> getWords() {
-        return wordRepository.getWords();
+        return wordMapper.getWords();
     }
 }

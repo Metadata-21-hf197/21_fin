@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.md_back.mappers.ApprovalMapper">
+    <select id="getApprovalById" parameterType="int" resultType="com.example.md_back.model.Approval">
+        SELECT *
+        FROM Approval
+        WHERE approvalId = #{approvalId}
+    </select>
+
+    <select id="getApprovals" parameterType="com.example.md_back.model.ApprovalStatus"
+            resultType="com.example.md_back.model.Approval">
+        SELECT *
+        FROM Approval
+        WHERE appprovalStatus = #{approvalStatus}
+    </select>
+
+    <select id="getApprovalsByCreateUserId" parameterType="int" resultType="com.example.md_back.model.Approval">
+        SELECT *
+        FROM Approval
+        WHERE createUser = #{userId}
+    </select>
+
+    <select id="getApprovalsByConfirmUserId" parameterType="int" resultType="com.example.md_back.model.Approval">
+        SELECT *
+        FROM Approval
+        WHERE confirmUser = #{userId}
+    </select>
+
+    <insert id="insertApproval" parameterType="com.example.md_back.model.Approval" useGeneratedKeys="true"
+            keyProperty="approvalId">
+        INSERT INTO Approval(approvalType, approvalStatus, wordType, targetId, slaveId, shortName, engName, korName, meaning, createUserId, createDate)
+        VALUES (#{approvalType.code}, #{approvalStatus.code}, #{wordType.code}, 0, #{slaveId}, #{shortName}, #{engName}, #{korName}, #{meaning}, #{createUser.memberId}, SYSDATE())
+    </insert>
+
+    <update id="updateApproval" parameterType="com.example.md_back.model.Approval">
+        UPDATE Approval
+        SET
+        <if test="shortName != null">shortName=#{shortName},</if>
+        <if test="engName != null">engName=#{engName},</if>
+        <if test="korName != null">korName=#{korName},</if>
+        <if test="meaning != null">meaning=#{meaning},</if>
+        createDate = SYSDATE
+        WHERE approvalId = #{approvalId}
+    </update>
+
+    <delete id="deleteApproval" parameterType="int">
+        DELETE
+        FROM Approval
+        WHERE approvalId = #{approvalId}
+    </delete>
+
+    <update id="confirmApproval" parameterType="int">
+        UPDATE Approval
+        SET approvalStatus = "C"
+          , confirmUser    = #{confirmUser.memberId}
+          , confirmDate    = SYSDATE()
+        WHERE approvalId = #{approvalId}
+    </update>
+</mapper>
