@@ -1,6 +1,10 @@
 package com.example.md_back;
 
+import com.example.md_back.Handler.ApprovalStatusHandler;
+import com.example.md_back.Handler.ApprovalTypeHandler;
+import com.example.md_back.Handler.WordTypeHandler;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.type.TypeHandler;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -27,7 +31,7 @@ public class MdBackApplication {
 
         Resource[] res = new PathMatchingResourcePatternResolver().getResources("classpath:mappers/*Mapper.xml");
         sessionFactory.setMapperLocations(res);
-
+        sessionFactory.setTypeHandlers(new TypeHandler[]{new ApprovalStatusHandler(), new ApprovalTypeHandler(), new WordTypeHandler()});
         return sessionFactory.getObject();
     }
 }
