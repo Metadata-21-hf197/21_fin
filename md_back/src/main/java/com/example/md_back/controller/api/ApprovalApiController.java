@@ -2,6 +2,7 @@ package com.example.md_back.controller.api;
 
 import com.example.md_back.dto.LoginDTO;
 import com.example.md_back.model.Approval;
+import com.example.md_back.model.ApprovalStatus;
 import com.example.md_back.model.ApprovalType;
 import com.example.md_back.model.WordType;
 import com.example.md_back.service.ApprovalService;
@@ -32,7 +33,7 @@ public class ApprovalApiController {
 
     @PutMapping("/approval/{approvalId}")
     public String approvalConfirm(@PathVariable int approvalId, @AuthenticationPrincipal LoginDTO loginDTO) {
-        Approval approval = approvalService.confirm(approvalId, loginDTO.getUser());
+        Approval approval = approvalService.confirm(approvalId, loginDTO.getUser(), ApprovalStatus.Confirm);
         if (approval != null) {
             if (approval.getWordType() == WordType.WORD) {
                 if (approval.getApprovalType() == ApprovalType.CREATE)
@@ -75,7 +76,7 @@ public class ApprovalApiController {
 
     @DeleteMapping("/approval/{id}")
     public String approvalDelete(@PathVariable int id) {
-        // delete by id
+        approvalService.delete(id);
         return "/approval";
     }
 }

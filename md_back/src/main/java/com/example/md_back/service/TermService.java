@@ -1,9 +1,9 @@
 package com.example.md_back.service;
 
 import com.example.md_back.dto.TermDto;
+import com.example.md_back.mappers.TermMapper;
+import com.example.md_back.mappers.TermWordMapper;
 import com.example.md_back.model.*;
-import com.example.md_back.repository.TermRepository;
-import com.example.md_back.repository.TermWordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,37 +16,46 @@ import java.util.Objects;
 public class TermService {
 
     @Autowired
-    private TermRepository termRepository;
+    private TermMapper termMapper;
 
     @Autowired
-    private TermWordRepository termWordRepository;
+    private TermWordMapper termWordMapper;
 
     @Transactional
     public void insertTerm(Approval approval) {
         Term term = new Term();
         term.approvalToTerm(approval);
-        termRepository.save(term);
+        termMapper.insertTerm(term);
     }
 
     @Transactional
     public void updateTerm(Approval approval) {
-        Term term = termRepository.findById(approval.getTargetId())
-                .orElseThrow(() -> new IllegalArgumentException("용어 수정 실패 : 용어를 찾을 수 없습니다."));
+        Term term = termMapper.getTermById(approval.getTargetId());
+        if (term == null) {
+            System.out.println("용어 수정 실패 : 용어를 찾을 수 없습니다.");
+            return;
+        }
         term.approvalToTerm(approval);
-        termRepository.save(term);
+        termMapper.updateTerm(term);
     }
 
     @Transactional
     public void deleteTerm(Approval approval) {
-        Term term = termRepository.findById(approval.getTargetId())
-                .orElseThrow(() -> new IllegalArgumentException("용어 삭제 실패 : 용어를 찾을 수 없습니다."));
+        Term term = termMapper.getTermById(approval.getTargetId());
+        if (term == null) {
+            System.out.println("용어 삭제 실패 : 용어를 찾을 수 없습니다.");
+            return;
+        }
         term.approvalToTerm(approval);
-        termRepository.save(term);
+        termMapper.deleteTerm(term);
     }
 
     public List<Approval> dtoToApproval(User user, TermDto termDto, int targetId) {  // UPDATE
-        Term term = termRepository.findById(targetId)
-                .orElseThrow(() -> new IllegalArgumentException("결재 추가 실패 : 용어를 찾을 수 없습니다."));
+        Term term = termMapper.getTermById(targetId);
+        if (term == null) {
+            System.out.println("결재 추가 실패 : 용어를 찾을 수 없습니다.");
+            return null;
+        }
         Approval body = new Approval();
         List<Approval> approvals = new ArrayList<>();
         body.setCreateUser(user);
@@ -73,7 +82,7 @@ public class TermService {
         }// body
 
 
-        List<Integer> termWords = termWordRepository.getWordIdByTermId(targetId);
+        List<Integer> termWords = termWordMapper.getWordIdListByTermId(targetId);
         for (int i : termWords) {
             if (!termDto.getWords().contains(i)) {
                 relation.setApprovalType(ApprovalType.DELETE);
@@ -122,41 +131,26 @@ public class TermService {
 
     @Transactional
     public void deleteTermDB(int termId) {
-        termRepository.deleteById(termId);
+        termMapper.deleteTermDB(termId);
     }
 
     @Transactional(readOnly = true)
     public Term findById(int termId) {
-        return termRepository.findById(termId).orElseThrow(() -> new IllegalArgumentException("용어 찾기 실패 : " + termId));
-    }
-
-    @Transactional(readOnly = true)
-    public List<Term> findByShortName(String shortName) {
-        return termRepository.findByShortName(shortName);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Term> findByEngName(String engName) {
-        return termRepository.findByEngName(engName);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Term> findByKorName(String korName) {
-        return termRepository.findByKorName(korName);
+        return termMapper.getTermById(termId);
     }
 
     @Transactional(readOnly = true)
     public List<Term> findByName(String name) {
-        return termRepository.findByName(name);
+        return termMapper.getTermsByName(name);
     }
 
     @Transactional(readOnly = true)
     public List<Term> getTermListByUserId(int userId) {
-        return termRepository.findByCreateUserOrModifyUser(userId);
+        return termMapper.getTermsByUserId(userId);
     }
 
     @Transactional
     public List<Term> getTerms() {
-        return termRepository.getTerms();
+        return termMapper.getTerms();
     }
 }

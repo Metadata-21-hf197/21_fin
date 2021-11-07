@@ -33,11 +33,6 @@ public class WordController {
     @GetMapping("/word/{wordId}")
     public String wordDetail(Model model, @PathVariable int wordId) {
         Word word = wordService.findById(wordId);
-//            if(word.isBanWord()){
-//                model.addAttribute("error", "금지어 처리된 단어입니다.");
-//                return "/word";
-//            }
-
         model.addAttribute("word", wordService.findById(wordId));
         return "word/detail";
     }

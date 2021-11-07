@@ -1,9 +1,10 @@
 package com.example.md_back.service;
 
 
+import com.example.md_back.mappers.ApprovalMapper;
 import com.example.md_back.model.Approval;
+import com.example.md_back.model.ApprovalStatus;
 import com.example.md_back.model.User;
-import com.example.md_back.repository.ApprovalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,59 +15,98 @@ import java.util.List;
 public class ApprovalService {
 
     @Autowired
-    private ApprovalRepository approvalRepository;
+    private ApprovalMapper approvalMapper;
 
     @Transactional
     public void insert(Approval approval) {
-        approvalRepository.save(approval);
+        approvalMapper.insertApproval(approval);
     }
 
     @Transactional
     public void insertApprovals(List<Approval> approvals) {
-        approvalRepository.saveAll(approvals);
+        for (Approval a : approvals) {
+            approvalMapper.insertApproval(a);
+        }
     }
 
     @Transactional
     public void update(Approval approval) {
-        Approval found = approvalRepository.findById(approval.getApprovalId()).orElseThrow(() -> new IllegalArgumentException("결재 수정 실패 : 해당하는 결재가 없습니다."));
-        if (found.isConfirmed()) {
-            System.out.println("이미 결재되었습니다.");
+        Approval found = approvalMapper.getApprovalById(approval.getApprovalId());
+        if (found == null) {
+            System.out.println("결재 수정 실패 : 해당하는 결재가 없습니다.");
             return;
         }
-        // found.setFields(approval)
-        approvalRepository.save(found);
+        if (found.isConfirmed()) {
+            System.out.println("결재 수정 실패 : 이미 결재되었습니다.");
+            return;
+        }
+        approvalMapper.updateApproval(approval);
+        // must not use
     }
 
     @Transactional
     public void delete(int approvalId) {
-        if (approvalRepository.findById(approvalId).orElseThrow(() -> new IllegalArgumentException("결재 삭제 실패 : 해당하는 결재가 없습니다.")).isConfirmed()) {
-            System.out.println("이미 결재되었습니다.");
+        Approval approval = approvalMapper.getApprovalById(approvalId);
+        if (approval == null) {
+            System.out.println("결재 삭제 실패 : 해당하는 결재가 없습니다.");
             return;
+        } else if (approval.isConfirmed()) {
+            System.out.println("결재 삭제 실패 : 이미 결재되었습니다.");
         }
-        approvalRepository.deleteById(approvalId);
+        approvalMapper.deleteApproval(approvalId);
     }
 
     @Transactional
-    public Approval confirm(int approvalId, User user){
-        Approval found = approvalRepository.findById(approvalId).orElseThrow(() -> new IllegalArgumentException("결재 실패 : 해당하는 결재가 없습니다."));
-        if (found.isConfirmed()) {
-            System.out.println("이미 결재되었습니다.");
+    public void deleteDB(int approvalId) {
+        approvalMapper.deleteApproval(approvalId);
+    }
+
+    @Transactional
+    public Approval confirm(int approvalId, User user, ApprovalStatus approvalStatus) {
+        Approval found = approvalMapper.getApprovalById(approvalId);
+        if (found == null) {
+            System.out.println("결재 처리 실패 : 해당하는 결재가 없습니다.");
+            return null;
+        } else if (found.isConfirmed()) {
+            System.out.println("결재 처리 실패 : 이미 결재되었습니다.");
             return null;
         }
-        found.setConfirmUser(user);
-        found.setConfirmDate(null);
-        approvalRepository.save(found);
+        approvalMapper.confirmApproval(approvalId, user.getMemberId(), approvalStatus.getCode());
         return found;
     }
 
+//    @Transactional
+//    public Approval deny(int approvalId, User user) {
+//        Approval found = approvalMapper.getApprovalById(approvalId);
+//        if (found == null) {
+//            System.out.println("결재 거절 실패 : 해당하는 결재가 없습니다.");
+//            return null;
+//        } else if (found.isConfirmed()) {
+//            System.out.println("결재 거절 실패 : 이미 결재되었습니다.");
+//            return null;
+//        }
+//        approvalMapper.denyApproval(approvalId, user.getMemberId());
+//        return found;
+//    }
+
     @Transactional(readOnly = true)
-    public List<Approval> getApprovalListByUserId(int userId){
-        return approvalRepository.findByCreateUser(userId);
+    public Approval getApprovalById(int id){
+        return approvalMapper.getApprovalById(id);
     }
 
     @Transactional(readOnly = true)
-    public List<Approval> getApprovalConfirmListByUser(int userId){
-        return approvalRepository.findByCreateUser(userId);
+    public List<Approval> getApprovals(ApprovalStatus approvalStatus){
+        return approvalMapper.getApprovals(approvalStatus);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Approval> getApprovalsByCreateUser(int userId) {
+        return approvalMapper.getApprovalsByCreateUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Approval> getApprovalsByConfirmUser(int userId) {
+        return approvalMapper.getApprovalsByConfirmUserId(userId);
     }
 
 }
