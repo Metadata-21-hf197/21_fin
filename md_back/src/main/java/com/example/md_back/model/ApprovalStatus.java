@@ -1,18 +1,24 @@
 package com.example.md_back.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@NoArgsConstructor
-public enum ApprovalStatus {
+public enum ApprovalStatus{
     Pending(1), Confirm(2), Denied(3);
 
-    @Getter
-    @Setter
-    private int code;
+    private int value;
 
-    ApprovalStatus(int code) {
-        this.code = code;
+    public int getValue(){
+        return value;
+    }
+
+    ApprovalStatus(int value) {
+        this.value = value;
+    }
+
+    public static ApprovalStatus valueOf(int value){
+        switch (value) {
+            case 1 : return ApprovalStatus.Pending;
+            case 2 : return ApprovalStatus.Confirm;
+            case 3 : return ApprovalStatus.Denied;
+            default: throw new AssertionError("Approval Status Error : Value Not Defined");
+        }
     }
 }
