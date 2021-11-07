@@ -3,14 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.md_back.mappers.WordMapper">
-    <insert id="insertWord" parameterType="com.example.md_back.model.Word" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO Word(shortName, engName, korName, meaning, deleteStatus, createUserId, createDate)
+<mapper namespace="com.example.md_back.mappers.TermMapper">
+    <insert id="insertTerm" parameterType="com.example.md_back.model.Term" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Term(shortName, engName, korName, meaning, deleteStatus, createUserId, createDate)
         VALUES (#{shortName}, #{engName}, #{korName}, #{meaning}, 0, #{createUser.memberId}, #{createDate})
     </insert>
 
-    <update id="updateWord" parameterType="com.example.md_back.model.Word">
-        UPDATE Word
+    <update id="updateTerm" parameterType="com.example.md_back.model.Term">
+        UPDATE Term
         SET
         <if test="shortName != null">shortName=#{shortName},</if>
         <if test="engName != null">engName=#{engName},</if>
@@ -21,43 +21,43 @@
         WHERE id = #{id}
     </update>
 
-    <update id="deleteWord" parameterType="com.example.md_back.model.Word">
-        UPDATE Word
+    <update id="deleteTerm" parameterType="com.example.md_back.model.Term">
+        UPDATE Term
         SET deleteStatus = 1,
             modifyUserId = #{modifyUser.memberId},
             modifyDate   = #{modifyDate}
         WHERE id = #{id}
     </update>
 
-    <select id="getWords" resultType="com.example.md_back.model.Word">
+    <select id="getTerms" resultType="com.example.md_back.model.Term">
         SELECT *
-        FROM Word
+        FROM Term
         WHERE deleteStatus = 0
     </select>
 
-    <select id="getWordsByName" parameterType="String" resultType="com.example.md_back.model.Word">
+    <select id="getTermsByName" parameterType="String" resultType="com.example.md_back.model.Term">
         SELECT *
-        FROM Word
+        FROM Term
         WHERE deleteStatus = 0
           And (shortName = #{name} OR engName = #{name} OR korName = #{name})
     </select>
 
-    <select id="getWordById" parameterType="int" resultType="com.example.md_back.model.Word">
+    <select id="getTermById" parameterType="int" resultType="com.example.md_back.model.Term">
         SELECT *
-        FROM Word
+        FROM Term
         WHERE id = #{id}
     </select>
 
-    <select id="getWordsByUserId" parameterType="int" resultType="com.example.md_back.model.Word">
+    <select id="getTermsByUserId" parameterType="int" resultType="com.example.md_back.model.Term">
         SELECT *
-        FROM Word
+        FROM Term
         WHERE deleteStatus = 0
           AND (createUserId = #{userId} OR modifyUserId = #{userId})
     </select>
 
-    <delete id="deleteWordDB" parameterType="int">
+    <delete id="deleteTermDB" parameterType="int">
         DELETE
-        FROM Word
+        FROM Term
         WHERE id = #{id}
     </delete>
 </mapper>

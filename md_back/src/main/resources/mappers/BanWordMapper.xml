@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.md_back.mappers.BanWordMapper">
+    <insert id="insert" parameterType="String">
+        INSERT INTO BanWord(name)
+        VALUES (#{name})
+    </insert>
+
+    <delete id="delete" parameterType="String">
+        DELETE
+        FROM BanWord
+        WHERE name = #{name}
+    </delete>
+
+    <select id="getBanWordById" parameterType="String" resultType="String">
+        SELECT *
+        FROM BanWord
+        WHERE name = #{name}
+    </select>
+
+    <select id="getBanWords" resultType="String">
+        SELECT *
+        FROM BanWord
+    </select>
+
+</mapper>
