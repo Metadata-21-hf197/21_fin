@@ -1,7 +1,6 @@
 package com.example.md_back.service;
 
-import com.example.md_back.model.BanWord;
-import com.example.md_back.repository.BanWordRepository;
+import com.example.md_back.mappers.BanWordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,27 +10,27 @@ import java.util.List;
 public class BanWordService {
 
     @Autowired
-    private BanWordRepository banWordRepository;
+    private BanWordMapper banWordMapper;
 
     public void insert(String name){
-        banWordRepository.save(new BanWord(name));
+        banWordMapper.insert(name);
     }
 
     public void delete(String name){
-        banWordRepository.deleteByName(name);
+        banWordMapper.delete(name);
     }
 
-    public BanWord findByName(String name){
-        return banWordRepository.findByName(name);
+    public String findByName(String name){
+        return banWordMapper.getBanWordById(name);
     }
 
-    public List<BanWord> getBanWordList(){
-        return banWordRepository.findAll();
+    public List<String> getBanWordList(){
+        return banWordMapper.getBanWords();
     }
 
     public boolean isValid(List<String> names) {
         for(String s : names){
-            if(banWordRepository.findByName(s) != null){
+            if(banWordMapper.getBanWordById(s) != null){
                 return false;
             }
         }

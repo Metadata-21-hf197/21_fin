@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.md_back.mappers.WordMapper">
+    <insert id="insertWord" parameterType="com.example.md_back.model.Word" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Word(shortName, engName, korName, meaning, deleteStatus, createUserId, createDate)
+        VALUES (#{shortName}, #{engName}, #{korName}, #{meaning}, 0, #{createUser.memberId}, #{createDate})
+    </insert>
+
+    <update id="updateWord" parameterType="com.example.md_back.model.Word">
+        UPDATE Word
+        SET
+        <if test="shortName != null">shortName=#{shortName},</if>
+        <if test="engName != null">engName=#{engName},</if>
+        <if test="korName != null">korName=#{korName},</if>
+        <if test="meaning != null">meaning=#{meaning},</if>
+        modifyUserId = #{modifyUser.memberId},
+        modifyDate = #{modifyDate}
+        WHERE id = #{id}
+    </update>
+
+    <update id="deleteWord" parameterType="com.example.md_back.model.Word">
+        UPDATE Word
+        SET deleteStatus = 1,
+            modifyUserId = #{modifyUser.memberId},
+            modifyDate   = #{modifyDate}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getWords" resultType="com.example.md_back.model.Word">
+        SELECT *
+        FROM Word
+        WHERE deleteStatus = 0
+    </select>
+
+    <select id="getWordsByName" parameterType="String" resultType="com.example.md_back.model.Word">
+        SELECT *
+        FROM Word
+        WHERE deleteStatus = 0
+          And (shortName = #{name} OR engName = #{name} OR korName = #{name})
+    </select>
+
+    <select id="getWordById" parameterType="int" resultType="com.example.md_back.model.Word">
+        SELECT *
+        FROM Word
+        WHERE id = #{id}
+    </select>
+
+    <select id="getWordsByUserId" parameterType="int" resultType="com.example.md_back.model.Word">
+        SELECT *
+        FROM Word
+        WHERE deleteStatus = 0
+          AND (createUserId = #{userId} OR modifyUserId = #{userId})
+    </select>
+
+    <delete id="deleteWordDB" parameterType="int">
+        DELETE
+        FROM Word
+        WHERE id = #{id}
+    </delete>
+</mapper>

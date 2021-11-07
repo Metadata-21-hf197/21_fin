@@ -42,7 +42,7 @@
         <if test="engName != null">engName=#{engName},</if>
         <if test="korName != null">korName=#{korName},</if>
         <if test="meaning != null">meaning=#{meaning},</if>
-        createDate = SYSDATE
+        createDate = SYSDATE()
         WHERE approvalId = #{approvalId}
     </update>
 
@@ -54,7 +54,7 @@
 
     <update id="confirmApproval" parameterType="int">
         UPDATE Approval
-        SET approvalStatus = "C"
+        SET approvalStatus = #{approvalStatus.code}
           , confirmUser    = #{confirmUser.memberId}
           , confirmDate    = SYSDATE()
         WHERE approvalId = #{approvalId}
