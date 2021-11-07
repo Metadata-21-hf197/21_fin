@@ -100,7 +100,7 @@ public class ApprovalService {
     }
 
     @Transactional(readOnly = true)
-    public List<Approval> getApprovalsByCreateUser(int userId) {
+    public List<Approval> getApprovalsByCreateUserId(int userId) {
         return approvalMapper.getApprovalsByCreateUserId(userId);
     }
 

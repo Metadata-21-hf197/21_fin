@@ -122,8 +122,8 @@ public class WordService {
     }
 
     @Transactional(readOnly = true)
-    public List<Word> getWordListByUser(int userId){
-        return wordMapper.getWordsByUserId(userId);
+    public List<Word> getWordListByUserId(int userId){
+        return wordMapper.getWordListByUserId(userId);
     }
 
     @Transactional(readOnly = true)

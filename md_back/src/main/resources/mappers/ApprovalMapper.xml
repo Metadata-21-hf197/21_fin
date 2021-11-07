@@ -20,7 +20,7 @@
     <select id="getApprovalsByCreateUserId" parameterType="int" resultType="com.example.md_back.model.Approval">
         SELECT *
         FROM Approval
-        WHERE createUser = #{userId}
+        WHERE createUserId = #{userId}
     </select>
 
     <select id="getApprovalsByConfirmUserId" parameterType="int" resultType="com.example.md_back.model.Approval">

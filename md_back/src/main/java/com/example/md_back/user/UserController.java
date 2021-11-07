@@ -142,7 +142,7 @@ public class UserController {
             int userId = user.getMemberId();
             wordList = wordService.getWordListByUserId(userId);
             termList = termService.getTermListByUserId(userId);
-            approvalList = approvalService.getApprovalListByUserId(userId);
+            approvalList = approvalService.getApprovalsByCreateUserId(userId);
         }
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("wordList", wordList);
