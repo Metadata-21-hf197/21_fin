@@ -18,13 +18,13 @@ public class Approval {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int approvalId;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private ApprovalType approvalType;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private ApprovalStatus approvalStatus;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private WordType wordType;
 
     @Column(nullable = false)

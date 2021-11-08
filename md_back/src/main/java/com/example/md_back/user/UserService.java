@@ -18,11 +18,12 @@ public class UserService implements UserServiceImpl{
     @Autowired
     private UserMapper userMapper;
 
+
     public LoginDTO getUser(String memberName) { return userMapper.getUser(memberName);}
 
     public User checkUser(User user) { return userMapper.checkUser(user);}
 
-    public User insertUser(User user) {return userMapper.insertUser(user);}
+    public void insertUser(User user) {userMapper.insertUser(user);}
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         LoginDTO principal = userMapper.getUser(id);
@@ -36,5 +37,4 @@ public class UserService implements UserServiceImpl{
         return principal;
     }
 
-    public int getUserNo() { return userMapper.getUserNo();}
 }

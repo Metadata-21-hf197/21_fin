@@ -13,6 +13,6 @@ public interface WordMapper {
     List<Word> getWords();
     List<Word> getWordsByName(String name);
     Word getWordById(int id);
-    List<Word> getWordsByUserId(int userId);
+    List<Word> getWordListByUserId(int userId);
     void deleteWordDB(int id);
 }

@@ -38,8 +38,9 @@ public class AuthProvider implements AuthenticationProvider {
         List<GrantedAuthority> grantedAuthorityList = new ArrayList<GrantedAuthority>();
 
         LoginDTO principal = (LoginDTO) userService.loadUserByUsername(id);
+        User pUser = principal.getUser();
         System.out.println(principal.getUser().getMemberName());
-
+        principal.setUsername(pUser.getMemberName());
         System.out.println(principal);
         if(principal == null) {
             System.out.println("DTO is null");
@@ -49,7 +50,7 @@ public class AuthProvider implements AuthenticationProvider {
             throw new BadCredentialsException("wrongpw");
         }
 
-        grantedAuthorityList.add(new SimpleGrantedAuthority(principal.getUserRole()));
+        grantedAuthorityList.add(new SimpleGrantedAuthority(principal.getUser().getUserRole()));
 
         return new MyAuthentication(id, password, grantedAuthorityList, principal);
     }

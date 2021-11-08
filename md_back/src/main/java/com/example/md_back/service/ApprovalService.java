@@ -71,7 +71,7 @@ public class ApprovalService {
             System.out.println("결재 처리 실패 : 이미 결재되었습니다.");
             return null;
         }
-        approvalMapper.confirmApproval(approvalId, user.getMemberId(), approvalStatus.getCode());
+        approvalMapper.confirmApproval(approvalId, user.getMemberId(), approvalStatus.getValue());
         return found;
     }
 
@@ -100,7 +100,7 @@ public class ApprovalService {
     }
 
     @Transactional(readOnly = true)
-    public List<Approval> getApprovalsByCreateUser(int userId) {
+    public List<Approval> getApprovalsByCreateUserId(int userId) {
         return approvalMapper.getApprovalsByCreateUserId(userId);
     }
 
