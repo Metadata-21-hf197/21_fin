@@ -1,17 +1,32 @@
 package com.example.md_back.user;
 
+import com.example.md_back.model.Approval;
+import com.example.md_back.model.Term;
 import com.example.md_back.model.User;
+import com.example.md_back.model.Word;
+import com.example.md_back.service.ApprovalService;
+import com.example.md_back.service.TermService;
+import com.example.md_back.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private WordService wordService;
+    @Autowired
+    private TermService termService;
+    @Autowired
+    private ApprovalService approvalService;
 
     public static final String LOGINFORM = "/user/loginform";
     public static final String JOINFORM = "/user/joinform";
@@ -37,7 +52,6 @@ public class UserController {
         //생성자로 테스트해보고 안되면 다 풀어 작성할예정
         User user = new User(memberName, password, email);
         //sequence 생성해야함
-        user.setMemberId(userService.getUserNo());
         userService.insertUser(user);
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -89,36 +103,53 @@ public class UserController {
     @Transactional
     @PostMapping("/user/join")
     @ResponseBody
-    public Map<String, Object> insert(User user) {
+    public Map<String, Object> insert(@RequestParam("memberName") String memberName,
+                                      @RequestParam("password") String password,
+                                      @RequestParam("email") String email,
+                                      @RequestParam("userRole") String userRole) {
         // String rawPassword = user.getPassword();
         // String encPassword = bCryptPasswordEncoder.encode(rawPassword);
         // user.setMemberName(encPassword);
+        User user = new User();
+        user.setMemberName(memberName);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setUserRole(userRole);
         userService.insertUser(user);
         //return result
-        return null;
+
+        Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("result", "success");
+
+        return returnMap;
     }
 
-    /**
-     * userUpdate
-     *
-     * @param user
-     * @return
-     */
-    @Transactional
-    @PutMapping("/user/update")
+    @GetMapping("/mypage")
     @ResponseBody
-    public Map<String, Object> update(User user) {
-//        User updateUser = userService.getUser(user.getMemberName());
-        // updateUser Exceptions~
+    public Map<String, Object> userWordList() throws Exception {
+        System.out.println("wordList in");
+        User user = new User();
+        List<Word> wordList = new ArrayList<>();
+        List<Term> termList = new ArrayList<>();
+        List<Approval> approvalList = new ArrayList<>();
 
-        // String rawPassword = user.getPassword();
-        // String encPassword = bCryptPasswordEncoder.encode(rawPassword);
-//        updateUser.setEmail(user.getEmail());
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+        if(!SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("ADMIN")) {
+            MyAuthentication authentication = (MyAuthentication) SecurityContextHolder.getContext().getAuthentication();
+            user = (User) authentication.principal.getUser();
 
-        // 세션 업데이트 부분
-        // Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        // SecurityContextHolder.getContext().setAuthentication(authentication);
-        return null;
+            System.out.println(user.getMemberName());
+            int userId = user.getMemberId();
+            wordList = wordService.getWordListByUserId(userId);
+            termList = termService.getTermListByUserId(userId);
+            approvalList = approvalService.getApprovalsByCreateUserId(userId);
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("wordList", wordList);
+        map.put("termList", termList);
+        map.put("approvalList", approvalList);
+        return map;
+
     }
 
     /**

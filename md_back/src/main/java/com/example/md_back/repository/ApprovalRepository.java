@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ApprovalRepository extends JpaRepository<Approval, Integer> {
-    @Query(value = "SELECT * FROM Approval WHERE createUser = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM Approval WHERE createUserId = :#{#userId}", nativeQuery = true)
     List<Approval> findByCreateUser(int userId);
 
     @Query(value = "SELECT * FROM Approval WHERE confirmUser = ?1", nativeQuery = true)

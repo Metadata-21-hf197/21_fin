@@ -11,7 +11,6 @@ public interface UserMapper {
     public LoginDTO getUser(String memberName);
     public User checkUser(User user);
 
-    public User insertUser(User user);
+    public void insertUser(User user);
 
-    public int getUserNo();
 }

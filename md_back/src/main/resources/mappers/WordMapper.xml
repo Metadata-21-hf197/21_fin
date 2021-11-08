@@ -48,7 +48,7 @@
         WHERE id = #{id}
     </select>
 
-    <select id="getWordsByUserId" parameterType="int" resultType="com.example.md_back.model.Word">
+    <select id="getWordListByUserId" parameterType="int" resultType="com.example.md_back.model.Word">
         SELECT *
         FROM Word
         WHERE deleteStatus = 0

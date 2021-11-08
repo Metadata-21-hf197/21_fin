@@ -14,13 +14,13 @@
             resultType="com.example.md_back.model.Approval">
         SELECT *
         FROM Approval
-        WHERE appprovalStatus = #{approvalStatus}
+        WHERE appprovalStatus = #{approvalStatus.value}
     </select>
 
     <select id="getApprovalsByCreateUserId" parameterType="int" resultType="com.example.md_back.model.Approval">
         SELECT *
         FROM Approval
-        WHERE createUser = #{userId}
+        WHERE createUserId = #{userId}
     </select>
 
     <select id="getApprovalsByConfirmUserId" parameterType="int" resultType="com.example.md_back.model.Approval">
@@ -32,7 +32,7 @@
     <insert id="insertApproval" parameterType="com.example.md_back.model.Approval" useGeneratedKeys="true"
             keyProperty="approvalId">
         INSERT INTO Approval(approvalType, approvalStatus, wordType, targetId, slaveId, shortName, engName, korName, meaning, createUserId, createDate)
-        VALUES (#{approvalType.code}, #{approvalStatus.code}, #{wordType.code}, 0, #{slaveId}, #{shortName}, #{engName}, #{korName}, #{meaning}, #{createUser.memberId}, SYSDATE())
+        VALUES (#{approvalType.value}, #{approvalStatus.value}, #{wordType.value}, 0, #{slaveId}, #{shortName}, #{engName}, #{korName}, #{meaning}, #{createUser.memberId}, SYSDATE())
     </insert>
 
     <update id="updateApproval" parameterType="com.example.md_back.model.Approval">
@@ -54,7 +54,7 @@
 
     <update id="confirmApproval" parameterType="int">
         UPDATE Approval
-        SET approvalStatus = #{approvalStatus.code}
+        SET approvalStatus = #{approvalStatus.value}
           , confirmUser    = #{confirmUser.memberId}
           , confirmDate    = SYSDATE()
         WHERE approvalId = #{approvalId}
