@@ -1,13 +1,13 @@
 package com.example.md_back.user;
 
-import com.example.md_back.model.Approval;
-import com.example.md_back.model.Term;
-import com.example.md_back.model.User;
-import com.example.md_back.model.Word;
+import com.example.md_back.dto.LoginDTO;
+import com.example.md_back.model.*;
 import com.example.md_back.service.ApprovalService;
+import com.example.md_back.service.DomainService;
 import com.example.md_back.service.TermService;
 import com.example.md_back.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +27,8 @@ public class UserController {
     private TermService termService;
     @Autowired
     private ApprovalService approvalService;
+    @Autowired
+    private DomainService domainService;
 
     public static final String LOGINFORM = "/user/loginform";
     public static final String JOINFORM = "/user/joinform";
@@ -126,28 +128,30 @@ public class UserController {
 
     @GetMapping("/mypage")
     @ResponseBody
-    public Map<String, Object> userWordList() throws Exception {
-        System.out.println("wordList in");
+    public Map<String, Object> userWordList(
+            @AuthenticationPrincipal LoginDTO principal) throws Exception {
         User user = new User();
         List<Word> wordList = new ArrayList<>();
         List<Term> termList = new ArrayList<>();
         List<Approval> approvalList = new ArrayList<>();
+        List<Domain> domainList = new ArrayList();
 
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         if(!SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("ADMIN")) {
             MyAuthentication authentication = (MyAuthentication) SecurityContextHolder.getContext().getAuthentication();
             user = (User) authentication.principal.getUser();
 
-            System.out.println(user.getMemberName());
+
             int userId = user.getMemberId();
             wordList = wordService.getWordListByUserId(userId);
             termList = termService.getTermListByUserId(userId);
             approvalList = approvalService.getApprovalsByCreateUserId(userId);
+            domainList = domainService.getDomainListByUserid(userId);
         }
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("wordList", wordList);
         map.put("termList", termList);
         map.put("approvalList", approvalList);
+        map.put("domainList", domainList);
         return map;
 
     }
