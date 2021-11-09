@@ -14,7 +14,6 @@ public class CustomArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
         Class<?> parameterType = methodParameter.getParameterType();
-        System.out.println("parameterType in");
         return LoginDTO.class.equals(parameterType);
     }
 

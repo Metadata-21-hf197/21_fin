@@ -27,7 +27,6 @@ public class UserService implements UserServiceImpl{
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         LoginDTO principal = userMapper.getUser(id);
-        System.out.println("Service - id : " + id);
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         if(principal != null) {
