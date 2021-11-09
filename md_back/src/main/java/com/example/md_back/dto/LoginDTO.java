@@ -8,11 +8,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 
 public @Data
-class LoginDTO implements UserDetails {
+class LoginDTO implements UserDetails, Serializable {
     private User user;
     public LoginDTO(User user) {
         this.user = user;
