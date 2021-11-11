@@ -4,7 +4,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public enum WordType{
-    WORD(1), TERM(2), DOMAIN(3), CODE(4);
+    WORD(1), TERM(2), DOMAIN(3), CODE(4), TERMWORD(5);
 
     @Getter
     
@@ -20,6 +20,7 @@ public enum WordType{
             case 2 : return WordType.TERM;
             case 3 : return WordType.DOMAIN;
             case 4 : return WordType.CODE;
+            case 5 : return WordType.TERMWORD;
             default: throw new AssertionError("Word Type Error : Value Not Defined");
         }
     }

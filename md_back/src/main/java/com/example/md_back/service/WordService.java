@@ -27,9 +27,10 @@ public class WordService {
     @Transactional
     public void updateWord(Approval approval) {
         Word word = wordMapper.getWordById(approval.getTargetId());
-        if(word  == null){
-            System.out.println("단어 수정 실패 : 단어를 찾을 수 없습니다.");
-            return;
+        if (word == null) {
+            throw new IllegalArgumentException("단어 수정 실패 : 단어를 찾을 수 없습니다.");
+        } else if (word.isDeleteStatus()) {
+            throw new IllegalArgumentException("단어 삭제 실패 : 이미 삭제된 단어입니다.");
         }
         word.approvalToWord(approval);
         wordMapper.updateWord(word);
@@ -38,22 +39,27 @@ public class WordService {
     @Transactional
     public void deleteWord(Approval approval) {
         Word word = wordMapper.getWordById(approval.getTargetId());
-        if(word == null){
-            System.out.println("단어 삭제 실패 : 이미 삭제된 단어입니다.");
-            return;
+        if (word == null) {
+            throw new IllegalArgumentException("단어 삭제 실패 : 단어를 찾을 수 없습니다.");
+        } else if (word.isDeleteStatus()) {
+            throw new IllegalArgumentException("단어 삭제 실패 : 이미 삭제된 단어입니다.");
         }
+        // show related Terms
         word.approvalToWord(approval);
         wordMapper.deleteWord(word);
         // change deleteStatus True
     }
 
 
+    @Transactional
     public Approval dtoToApproval(User user, WordDto wordDto, int targetId) {  // UPDATE
         Word word = wordMapper.getWordById(targetId);
-        if(word == null) {
-            System.out.println("결재 추가 실패 : 단어를 찾을 수 없습니다.");
-            return null;
+        if (word == null) {
+            throw new IllegalArgumentException("결재 추가 실패 : 단어를 찾을 수 없습니다.");
+        } else if (word.isDeleteStatus()) {
+            throw new IllegalArgumentException("단어 삭제 실패 : 이미 삭제된 단어입니다.");
         }
+
         Approval approval = new Approval();
         approval.setCreateUser(user);
         approval.setTargetId(targetId);
@@ -76,6 +82,7 @@ public class WordService {
         return approval;
     }
 
+    @Transactional
     public Approval dtoToApproval(User user, WordDto wordDto) {  // CREATE
         Approval approval = new Approval();
         approval.setCreateUser(user);
@@ -92,10 +99,13 @@ public class WordService {
         return approval;
     }
 
+    @Transactional
     public Approval dtoToApproval(User user, int targetId) { // DELETE
-        if(wordMapper.getWordById(targetId) == null){
-            System.out.println("이미 삭제된 단어입니다");
-            return null;
+        Word word = wordMapper.getWordById(targetId);
+        if (word == null) {
+            throw new IllegalArgumentException("단어 삭제 실패 : 단어가 존재하지 않습니다.");
+        } else if (word.isDeleteStatus()) {
+            throw new IllegalArgumentException("단어 삭제 실패 : 이미 삭제된 단어입니다.");
         }
         Approval approval = new Approval();
         approval.setCreateUser(user);
@@ -122,7 +132,7 @@ public class WordService {
     }
 
     @Transactional(readOnly = true)
-    public List<Word> getWordListByUserId(int userId){
+    public List<Word> getWordListByUserId(int userId) {
         return wordMapper.getWordListByUserId(userId);
     }
 

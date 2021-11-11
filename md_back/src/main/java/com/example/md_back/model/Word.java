@@ -50,6 +50,20 @@ public class Word {
     private Timestamp modifyDate;
 
     public void approvalToWord(Approval approval) {
+        id = approval.getTargetId();
+        if (approval.getApprovalType() == ApprovalType.DELETE) {
+            modifyUser = approval.getCreateUser();
+            modifyDate = approval.getCreateDate();
+            deleteStatus = true;
+            return;
+        } else if (approval.getApprovalType() == ApprovalType.CREATE) {
+            createUser = approval.getCreateUser();
+            createDate = approval.getCreateDate();
+            deleteStatus = false;
+        } else if (approval.getApprovalType() == ApprovalType.UPDATE) {
+            modifyUser = approval.getCreateUser();
+            modifyDate = approval.getCreateDate();
+        }
         if (approval.getShortName() != null)
             shortName = approval.getShortName();
         if (approval.getEngName() != null)
@@ -58,15 +72,5 @@ public class Word {
             korName = approval.getKorName();
         if (approval.getMeaning() != null)
             meaning = approval.getMeaning();
-        if (approval.getApprovalType() == ApprovalType.DELETE) {
-            deleteStatus = true;
-        } else if (approval.getApprovalType() == ApprovalType.CREATE) {
-            createUser = approval.getCreateUser();
-            createDate = approval.getCreateDate();
-            deleteStatus = false;
-        } else {
-            modifyUser = approval.getCreateUser();
-            modifyDate = approval.getCreateDate();
-        }
     }
 }

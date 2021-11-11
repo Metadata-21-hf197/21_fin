@@ -60,4 +60,11 @@
         FROM Term
         WHERE id = #{id}
     </delete>
+
+    <update id="updateTermByTermWord" parameterType="com.example.md_back.model.Approval">
+        UPDATE Term
+        SET modifyUserId = #{createUser.memberId},
+            modifyDate = #{createDate}
+        WHERE id = #{targetId}
+    </update>
 </mapper>

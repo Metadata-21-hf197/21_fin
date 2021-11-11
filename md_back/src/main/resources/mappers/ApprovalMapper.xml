@@ -4,7 +4,32 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.md_back.mappers.ApprovalMapper">
-    <select id="getApprovalById" parameterType="int" resultType="com.example.md_back.model.Approval">
+    <resultMap id="approvalUser" type="com.example.md_back.model.Approval">
+        <id property="approvalId" column="approvalId"/>
+        <result property="approvalType" column="approvalType"
+                typeHandler="com.example.md_back.Handler.ApprovalTypeHandler"/>
+        <result property="approvalStatus" column="approvalStatus"
+                typeHandler="com.example.md_back.Handler.ApprovalStatusHandler"/>
+        <result property="wordType" column="wordType" typeHandler="com.example.md_back.Handler.WordTypeHandler"/>
+        <result property="targetId" column="targetId"/>
+        <result property="slaveId" column="slaveId"/>
+        <result property="shortName" column="shortName"/>
+        <result property="engName" column="engName"/>
+        <result property="korName" column="korName"/>
+        <result property="meaning" column="meaning"/>
+        <result property="createDate" column="createDate"/>
+        <result property="confirmDate" column="confirmDate"/>
+        <association property="createUser" column="createUserId" select="getUserById"/>
+        <association property="confirmUser" column="confirmUserId" select="getUserById"/>
+    </resultMap>
+
+    <select id="getUserById" parameterType="int" resultType="com.example.md_back.model.User">
+        select memberId, memberName, email, quitStatus, userRole
+        FROM User
+        WHERE memberId = #{memberId}
+    </select>
+
+    <select id="getApprovalById" parameterType="int" resultMap="approvalUser">
         SELECT *
         FROM Approval
         WHERE approvalId = #{approvalId}
@@ -26,13 +51,16 @@
     <select id="getApprovalsByConfirmUserId" parameterType="int" resultType="com.example.md_back.model.Approval">
         SELECT *
         FROM Approval
-        WHERE confirmUser = #{userId}
+        WHERE confirmUserId = #{userId}
     </select>
 
     <insert id="insertApproval" parameterType="com.example.md_back.model.Approval" useGeneratedKeys="true"
             keyProperty="approvalId">
-        INSERT INTO Approval(approvalType, approvalStatus, wordType, targetId, slaveId, shortName, engName, korName, meaning, createUserId, createDate)
-        VALUES (#{approvalType.value}, #{approvalStatus.value}, #{wordType.value}, 0, #{slaveId}, #{shortName}, #{engName}, #{korName}, #{meaning}, #{createUser.memberId}, SYSDATE())
+        INSERT INTO Approval(approvalType, approvalStatus, wordType, targetId, slaveId, shortName, engName, korName,
+                             meaning, createUserId, createDate)
+        VALUES (#{approvalType.value}, 1, #{wordType.value}, #{targetId}, #{slaveId}, #{shortName}, #{engName},
+                #{korName},
+                #{meaning}, #{createUser.memberId}, SYSDATE())
     </insert>
 
     <update id="updateApproval" parameterType="com.example.md_back.model.Approval">
@@ -54,8 +82,8 @@
 
     <update id="confirmApproval" parameterType="int">
         UPDATE Approval
-        SET approvalStatus = #{approvalStatus.value}
-          , confirmUser    = #{confirmUser.memberId}
+        SET approvalStatus = #{approvalStatus}
+          , confirmUserId  = #{confirmUserId}
           , confirmDate    = SYSDATE()
         WHERE approvalId = #{approvalId}
     </update>

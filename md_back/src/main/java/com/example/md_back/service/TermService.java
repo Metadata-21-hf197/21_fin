@@ -3,6 +3,7 @@ package com.example.md_back.service;
 import com.example.md_back.dto.TermDto;
 import com.example.md_back.mappers.TermMapper;
 import com.example.md_back.mappers.TermWordMapper;
+import com.example.md_back.mappers.WordMapper;
 import com.example.md_back.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,11 +22,28 @@ public class TermService {
     @Autowired
     private TermWordMapper termWordMapper;
 
+    @Autowired
+    private WordMapper wordMapper;
+
     @Transactional
     public void insertTerm(Approval approval) {
         Term term = new Term();
         term.approvalToTerm(approval);
         termMapper.insertTerm(term);
+    }
+
+    @Transactional
+    public void insertTermWord(Approval approval){
+        if(termMapper.getTermById(approval.getTargetId()) == null){
+            System.out.println("용어 단어 추가 실패 : 용어를 찾을 수 없습니다.");
+            return;
+        }
+        if(wordMapper.getWordById(approval.getSlaveId()) == null){
+            System.out.println("용어 단어 추가 실패 : 단어를 찾을 수 없습니다.");
+            return;
+        }
+        termWordMapper.insert(approval.getTargetId(), approval.getSlaveId());
+        termMapper.updateTermByTermWord(approval);
     }
 
     @Transactional
@@ -48,6 +66,13 @@ public class TermService {
         }
         term.approvalToTerm(approval);
         termMapper.deleteTerm(term);
+        termWordMapper.deleteByTermId(approval.getApprovalId());
+    }
+
+    @Transactional
+    public void deleteTermWord(Approval approval) {
+        termWordMapper.delete(approval.getTargetId());
+        termMapper.updateTermByTermWord(approval);
     }
 
     public List<Approval> dtoToApproval(User user, TermDto termDto, int targetId) {  // UPDATE

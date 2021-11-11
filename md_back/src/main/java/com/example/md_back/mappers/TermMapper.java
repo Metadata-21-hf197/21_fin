@@ -1,5 +1,6 @@
 package com.example.md_back.mappers;
 
+import com.example.md_back.model.Approval;
 import com.example.md_back.model.Term;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -15,4 +16,5 @@ public interface TermMapper {
     Term getTermById(int id);
     List<Term> getTermsByUserId(int userId);
     void deleteTermDB(int id);
+    void updateTermByTermWord(Approval approval);
 }

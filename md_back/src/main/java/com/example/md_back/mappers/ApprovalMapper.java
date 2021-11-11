@@ -2,8 +2,6 @@ package com.example.md_back.mappers;
 
 import com.example.md_back.model.Approval;
 import com.example.md_back.model.ApprovalStatus;
-import org.apache.ibatis.annotations.Arg;
-import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

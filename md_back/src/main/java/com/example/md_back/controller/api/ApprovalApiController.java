@@ -31,52 +31,56 @@ public class ApprovalApiController {
     @Autowired
     private DomainService domainService;
 
-    @PutMapping("/approval/{approvalId}")
+
+    @PutMapping("/approval/confirm/{approvalId}")
     public String approvalConfirm(@PathVariable int approvalId, @AuthenticationPrincipal LoginDTO loginDTO) {
         Approval approval = approvalService.confirm(approvalId, loginDTO.getUser(), ApprovalStatus.Confirm);
-        if (approval != null) {
-            if (approval.getWordType() == WordType.WORD) {
-                if (approval.getApprovalType() == ApprovalType.CREATE)
-                    wordService.insertWord(approval);
-                if (approval.getApprovalType() == ApprovalType.UPDATE)
-                    wordService.updateWord(approval);
-                if (approval.getApprovalType() == ApprovalType.DELETE)
-                    wordService.deleteWord(approval);
-            }
-
-            if (approval.getWordType() == WordType.TERM) {
-                if (approval.getApprovalType() == ApprovalType.CREATE)
-                    termService.insertTerm(approval);
-                if (approval.getApprovalType() == ApprovalType.UPDATE)
-                    termService.updateTerm(approval);
-                if (approval.getApprovalType() == ApprovalType.DELETE)
-                    termService.deleteTerm(approval);
-            }
-
-            if (approval.getWordType() == WordType.DOMAIN) {
-                if (approval.getApprovalType() == ApprovalType.CREATE)
-                    domainService.insertDomain(approval);
-                if (approval.getApprovalType() == ApprovalType.UPDATE)
-                    domainService.updateDomain(approval);
-                if (approval.getApprovalType() == ApprovalType.DELETE)
-                    domainService.updateDomain(approval);
-            }
-
-            if (approval.getWordType() == WordType.CODE) {
-                if (approval.getApprovalType() == ApprovalType.CREATE)
-                    domainService.addCode(approval);
-                if (approval.getApprovalType() == ApprovalType.UPDATE)
-                    domainService.updateCode(approval);
-                if (approval.getApprovalType() == ApprovalType.DELETE)
-                    domainService.deleteCode(approval);
-            }
+        if (approval.getWordType() == WordType.WORD) {
+            if (approval.getApprovalType() == ApprovalType.CREATE)
+                wordService.insertWord(approval);
+            else if (approval.getApprovalType() == ApprovalType.UPDATE)
+                wordService.updateWord(approval);
+            else if (approval.getApprovalType() == ApprovalType.DELETE)
+                wordService.deleteWord(approval);
+        } else if (approval.getWordType() == WordType.TERM) {
+            if (approval.getApprovalType() == ApprovalType.CREATE)
+                termService.insertTerm(approval);
+            else if (approval.getApprovalType() == ApprovalType.UPDATE)
+                termService.updateTerm(approval);
+            else if (approval.getApprovalType() == ApprovalType.DELETE)
+                termService.deleteTerm(approval);
+        } else if (approval.getWordType() == WordType.DOMAIN) {
+            if (approval.getApprovalType() == ApprovalType.CREATE)
+                domainService.insertDomain(approval);
+            else if (approval.getApprovalType() == ApprovalType.UPDATE)
+                domainService.updateDomain(approval);
+            else if (approval.getApprovalType() == ApprovalType.DELETE)
+                domainService.updateDomain(approval);
+        } else if (approval.getWordType() == WordType.CODE) {
+            if (approval.getApprovalType() == ApprovalType.CREATE)
+                domainService.addCode(approval);
+            else if (approval.getApprovalType() == ApprovalType.UPDATE)
+                domainService.updateCode(approval);
+            else if (approval.getApprovalType() == ApprovalType.DELETE)
+                domainService.deleteCode(approval);
+        } else if (approval.getWordType() == WordType.TERMWORD) {
+            if (approval.getApprovalType() == ApprovalType.CREATE)
+                termService.insertTermWord(approval);
+            else if (approval.getApprovalType() == ApprovalType.DELETE)
+                termService.deleteTermWord(approval);
         }
         return "/approval";
     }
 
-    @DeleteMapping("/approval/{id}")
-    public String approvalDelete(@PathVariable int id) {
-        approvalService.delete(id);
+    @PutMapping("/approval/deny/{approvalId}")
+    public String approvalDeny(@PathVariable int approvalId, @AuthenticationPrincipal LoginDTO loginDTO) {
+        approvalService.confirm(approvalId, loginDTO.getUser(), ApprovalStatus.Denied);
+        return "/approval";
+    }
+
+    @DeleteMapping("/approval/{approvalId}")
+    public String approvalDelete(@PathVariable int approvalId) {
+        approvalService.delete(approvalId);
         return "/approval";
     }
 }

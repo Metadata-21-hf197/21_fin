@@ -3,7 +3,7 @@ package com.example.md_back.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class Approval {
 
