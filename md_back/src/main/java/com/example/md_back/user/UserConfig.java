@@ -41,11 +41,16 @@ public class UserConfig extends WebSecurityConfigurerAdapter {
         //권한 필요한 URI : antMatchers("URI").authenticated()
         //권한 불필요한 URI : antMatchers("URI").permitAll()
         http.authorizeRequests()
-//                .antMatchers("/**").permitAll()
                 //security_login
+                .antMatchers("/mypage/**").authenticated()
+                .antMatchers("/word/**").authenticated()
+                .antMatchers("/term/**").authenticated()
+                .antMatchers("/domain/**").authenticated()
+                //permitAll
+                .antMatchers("/**").permitAll()
                 .and()
+
                 .formLogin()
-//
                 .loginPage("/user/login")
                 .loginProcessingUrl("/user/login")
                 .defaultSuccessUrl("/table/word") //main으로 수정
@@ -53,10 +58,11 @@ public class UserConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(new LoginFailHandler())
                 .permitAll()
 
+                //logout
                 .and()
                 .logout()
                 .logoutUrl("/templates/user/logout")
-                .logoutSuccessUrl("/")//main으로 수정
+                .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .permitAll();
     }
