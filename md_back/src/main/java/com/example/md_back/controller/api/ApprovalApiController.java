@@ -10,13 +10,14 @@ import com.example.md_back.service.DomainService;
 import com.example.md_back.service.TermService;
 import com.example.md_back.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class ApprovalApiController {
 
     @Autowired
@@ -33,7 +34,7 @@ public class ApprovalApiController {
 
 
     @PutMapping("/approval/confirm/{approvalId}")
-    public String approvalConfirm(@PathVariable int approvalId, @AuthenticationPrincipal LoginDTO loginDTO) {
+    public int approvalConfirm(@PathVariable int approvalId, @AuthenticationPrincipal LoginDTO loginDTO) {
         Approval approval = approvalService.confirm(approvalId, loginDTO.getUser(), ApprovalStatus.Confirm);
         if (approval.getWordType() == WordType.WORD) {
             if (approval.getApprovalType() == ApprovalType.CREATE)
@@ -55,7 +56,7 @@ public class ApprovalApiController {
             else if (approval.getApprovalType() == ApprovalType.UPDATE)
                 domainService.updateDomain(approval);
             else if (approval.getApprovalType() == ApprovalType.DELETE)
-                domainService.updateDomain(approval);
+                domainService.deleteDomain(approval);
         } else if (approval.getWordType() == WordType.CODE) {
             if (approval.getApprovalType() == ApprovalType.CREATE)
                 domainService.addCode(approval);
@@ -69,18 +70,18 @@ public class ApprovalApiController {
             else if (approval.getApprovalType() == ApprovalType.DELETE)
                 termService.deleteTermWord(approval);
         }
-        return "/approval";
+        return HttpStatus.OK.value();
     }
 
     @PutMapping("/approval/deny/{approvalId}")
-    public String approvalDeny(@PathVariable int approvalId, @AuthenticationPrincipal LoginDTO loginDTO) {
+    public int approvalDeny(@PathVariable int approvalId, @AuthenticationPrincipal LoginDTO loginDTO) {
         approvalService.confirm(approvalId, loginDTO.getUser(), ApprovalStatus.Denied);
-        return "/approval";
+        return HttpStatus.OK.value();
     }
 
     @DeleteMapping("/approval/{approvalId}")
-    public String approvalDelete(@PathVariable int approvalId) {
+    public int approvalDelete(@PathVariable int approvalId) {
         approvalService.delete(approvalId);
-        return "/approval";
+        return HttpStatus.OK.value();
     }
 }

@@ -17,13 +17,13 @@ public class Code {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = true, length = 100)
+    @Column(length = 100)
     private String shortName;
 
     @Column(nullable = false, length = 100)
     private String engName;
 
-    @Column(nullable = true, length = 100)
+    @Column(length = 100)
     private String korName;
 
     @ManyToOne
@@ -31,6 +31,7 @@ public class Code {
     private Domain domain;
 
     public void approvalToCode(Approval approval) {
+        id = approval.getTargetId();
         if (approval.getSlaveId() > 0) { // id != null and id !=0
             if (approval.getShortName() != null)
                 shortName = approval.getShortName();

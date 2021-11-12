@@ -5,16 +5,17 @@
 
 <mapper namespace="com.example.md_back.mappers.CodeMapper">
     <insert id="insertCode" parameterType="com.example.md_back.model.Code" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO Code(shortName, engName, korName)
-        VALUES (#{shortName}, #{engName}, #{korName})
+        INSERT INTO Code(domainId, shortName, engName, korName)
+        VALUES (#{domain.id}, #{shortName}, #{engName}, #{korName})
     </insert>
 
     <update id="updateCode" parameterType="com.example.md_back.model.Code">
         UPDATE Code
-        SET
+        <set>
         <if test="shortName != null">shortName=#{shortName},</if>
         <if test="engName != null">engName=#{engName},</if>
         <if test="korName != null">korName=#{korName},</if>
+        </set>
         WHERE id = #{id}
     </update>
 
@@ -22,6 +23,12 @@
         DELETE
         FROM Code
         WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteCodeByDomainId" parameterType="int">
+        DELETE
+        FROM Code
+        WHERE domainId = #{domainId}
     </delete>
 
     <select id="getCodes" resultType="com.example.md_back.model.Code">
@@ -44,7 +51,7 @@
     <select id="getCodesByDomainId" parameterType="int" resultType="com.example.md_back.model.Code">
         SELECT *
         FROM Code
-        WHERE #{domain.id}
+        WHERE domainId = #{domainId}
     </select>
 
 </mapper>

@@ -5,10 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
 
 @Controller
 public class BanWordController {
@@ -16,21 +12,14 @@ public class BanWordController {
     @Autowired
     private BanWordService banWordService;
 
-    @GetMapping("/banword")
-    private String home(Model model){
+    @GetMapping("/table/banword")
+    private String home(Model model) {
         model.addAttribute("banWords", banWordService.getBanWordList());
-        return "banword/home";
+        return "table/banword";
     }
 
-    @PostMapping("/banword/valid")
-    private String search(Model model, @RequestBody List<String> names){
-        model.addAttribute("banWord", banWordService.isValid(names));
-        // keep uri, just check
-        return "";
-    }
-
-    @GetMapping("/banword/insert")
-    private String insertForm(){
+    @GetMapping("/table/banword/insert")
+    private String insertForm() {
         return "banword/insertForm";
     }
 }

@@ -10,6 +10,7 @@ public interface CodeMapper {
     void insertCode(Code code);
     void updateCode(Code code);
     void deleteCode(int id);
+    void deleteCodeByDomainId(int domainId);
     List<Code> getCodes();
     List<Code> getCodesByName(String name);
     Code getCodeById(int id);

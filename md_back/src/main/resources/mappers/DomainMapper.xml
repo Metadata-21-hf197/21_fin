@@ -11,14 +11,22 @@
 
     <update id="updateDomain" parameterType="com.example.md_back.model.Domain">
         UPDATE Domain
-        SET
+        <set>
         <if test="shortName != null">shortName=#{shortName},</if>
         <if test="engName != null">engName=#{engName},</if>
         <if test="korName != null">korName=#{korName},</if>
         <if test="meaning != null">meaning=#{meaning},</if>
         modifyUserId = #{modifyUser.memberId},
         modifyDate = #{modifyDate}
+        </set>
         WHERE id = #{id}
+    </update>
+
+    <update id="updateDomainByCode" parameterType="com.example.md_back.model.Approval">
+        UPDATE Domain
+        SET modifyUserId = #{createUser.memberId},
+            modifyDate   = #{createDate}
+        WHERE id = #{slaveId}
     </update>
 
     <update id="deleteDomain" parameterType="com.example.md_back.model.Domain">

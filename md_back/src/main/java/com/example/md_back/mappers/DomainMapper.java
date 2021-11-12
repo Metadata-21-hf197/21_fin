@@ -1,5 +1,6 @@
 package com.example.md_back.mappers;
 
+import com.example.md_back.model.Approval;
 import com.example.md_back.model.Domain;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -7,8 +8,9 @@ import java.util.List;
 
 @Mapper
 public interface DomainMapper {
-    void updateDomain(Domain domain);
     void insertDomain(Domain domain);
+    void updateDomain(Domain domain);
+    void updateDomainByCode(Approval approval);
     void deleteDomain(Domain domain);
     List<Domain> getDomains();
     List<Domain> getDomainsByName(String name);

@@ -11,13 +11,14 @@
 
     <update id="updateTerm" parameterType="com.example.md_back.model.Term">
         UPDATE Term
-        SET
+        <set>
         <if test="shortName != null">shortName=#{shortName},</if>
         <if test="engName != null">engName=#{engName},</if>
         <if test="korName != null">korName=#{korName},</if>
         <if test="meaning != null">meaning=#{meaning},</if>
         modifyUserId = #{modifyUser.memberId},
         modifyDate = #{modifyDate}
+        </set>
         WHERE id = #{id}
     </update>
 

@@ -12,24 +12,24 @@ public class DomainController {
     @Autowired
     private DomainService domainService;
 
-    @GetMapping("/domain")
+    @GetMapping("/table/domain")
     public String domainHome(Model model) {
         model.addAttribute("domains", domainService.getDomains());
-        return "domain/home";
+        return "table/domain";
     }
 
-    @GetMapping("/domain/insert")
+    @GetMapping("/table/domain/insert")
     public String insertForm(){
         return "domain/insertForm";
     }
 
-    @GetMapping("/domain/{domainId}/update")
+    @GetMapping("/table/domain/{domainId}/update")
     public String updateForm(Model model, @PathVariable int domainId){
         model.addAttribute("domain",domainService.findById(domainId));
         return "domain/updateForm";
     }
 
-    @GetMapping("/domain/{domainId}")
+    @GetMapping("/table/domain/{domainId}")
     public String domainDetail(Model model, @PathVariable int domainId)  {
         model.addAttribute("domain", domainService.findById(domainId));
         return "domain/detail";

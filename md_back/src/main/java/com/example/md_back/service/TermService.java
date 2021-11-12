@@ -76,12 +76,12 @@ public class TermService {
     @Transactional
     public List<Approval> dtoToApproval(User user, TermDto termDto, int targetId) {  // UPDATE
         Term term = termMapper.getTermById(targetId);
-        if (term == null) throw new IllegalArgumentException("결재 추가 실패 : 용어를 찾을 수 없습니다.");
-        else if (term.isDeleteStatus()) throw new IllegalArgumentException("결재 추가 실패 : 삭제된 용어입니다.");
+        if (term == null) throw new IllegalArgumentException("결재 생성 실패 : 용어를 찾을 수 없습니다.");
+        else if (term.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 삭제된 용어입니다.");
 
         for (int i : termDto.getWords()) {
             if (wordMapper.getWordById(i) == null)
-                throw new IllegalArgumentException("결재 추가 실패 : 용어 단어 리스트 손상");
+                throw new IllegalArgumentException("결재 생성 실패 : 용어 단어 리스트 손상");
         }
         List<Approval> result = new ArrayList<>();
         if (termDto.getEngName() != null || termDto.getKorName() != null || termDto.getShortName() != null || termDto.getMeaning() != null) {
@@ -149,8 +149,8 @@ public class TermService {
     @Transactional
     public Approval dtoToApproval(User user, int targetId) { // DELETE
         Term term = termMapper.getTermById(targetId);
-        if (term == null) throw new IllegalArgumentException("결재 추가 실패 : 용어를 찾을 수 없습니다.");
-        else if (term.isDeleteStatus()) throw new IllegalArgumentException("결재 추가 실패 : 이미 삭제된 용어입니다");
+        if (term == null) throw new IllegalArgumentException("결재 생성 실패 : 용어를 찾을 수 없습니다.");
+        else if (term.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 이미 삭제된 용어입니다");
         return Approval.builder()
                 .createUser(user)
                 .targetId(targetId)

@@ -27,13 +27,10 @@ public class DomainApiController {
         return HttpStatus.OK.value();
     }
 
-    @PostMapping("/domain/{domainId}/addCode")
+    @PostMapping("/domain/{domainId}/code")
     public int addCode(@PathVariable int domainId, @RequestBody CodeDto codeDto, @AuthenticationPrincipal LoginDTO loginDTO) {
         Approval approval = domainService.dtoToApproval(loginDTO.getUser(), codeDto, domainId);
-        approval.setTargetId(0);
-        approval.setSlaveId(domainId);
-        approval.setCreateUser(loginDTO.getUser());
-        domainService.addCode(approval);
+        approvalService.insert(approval);
         return HttpStatus.OK.value();
     }
 
@@ -44,7 +41,7 @@ public class DomainApiController {
         return HttpStatus.OK.value();
     }
 
-    @PutMapping("/domain/{domainId}/update/{codeId}")
+    @PutMapping("/domain/{domainId}/{codeId}")
     public int updateCode(@PathVariable int domainId, @PathVariable int codeId, @RequestBody CodeDto codeDto, @AuthenticationPrincipal LoginDTO loginDTO) {
         Approval approval = domainService.dtoToApproval(loginDTO.getUser(), codeDto, codeId, domainId);
         approvalService.insert(approval);
@@ -58,7 +55,7 @@ public class DomainApiController {
         return HttpStatus.OK.value();
     }
 
-    @DeleteMapping("/domain/{domainId}/delete/{codeId}")
+    @DeleteMapping("/domain/{domainId}/{codeId}")
     public int deleteCode(@PathVariable int domainId, @PathVariable int codeId, @AuthenticationPrincipal LoginDTO loginDTO) {
         Approval approval = domainService.dtoToApproval(loginDTO.getUser(), codeId, domainId);
         approvalService.insert(approval);

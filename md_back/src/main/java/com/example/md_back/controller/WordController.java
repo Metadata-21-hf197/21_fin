@@ -13,24 +13,24 @@ public class WordController {
     @Autowired
     private WordService wordService;
 
-    @GetMapping("/word")
+    @GetMapping("/table/word")
     public String wordHome(Model model) {
         model.addAttribute("words", wordService.getWords());
-        return "word/home";
+        return "table/word";
     }
 
-    @GetMapping("/word/insert")
+    @GetMapping("/table/word/insert")
     public String insertForm() {
         return "word/insertForm";
     }
 
-    @GetMapping("/word/{wordId}/update")
+    @GetMapping("/table/word/{wordId}/update")
     public String updateForm(Model model, @PathVariable int wordId) {
         model.addAttribute("word", wordService.findById(wordId));
         return "word/updateForm";
     }
 
-    @GetMapping("/word/{wordId}")
+    @GetMapping("/table/word/{wordId}")
     public String wordDetail(Model model, @PathVariable int wordId) {
         Word word = wordService.findById(wordId);
         model.addAttribute("word", wordService.findById(wordId));

@@ -2,9 +2,10 @@ package com.example.md_back.controller.api;
 
 import com.example.md_back.service.BanWordService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class BanWordApiController {
@@ -13,14 +14,19 @@ public class BanWordApiController {
     private BanWordService banWordService;
 
     @PostMapping("/banword")
-    private String insert(String name){
+    public int insert(String name){
         banWordService.insert(name);
-        return "/banword";
+        return HttpStatus.OK.value();
     }
 
     @DeleteMapping("/banword")
-    private String delete(String name){
+    public int delete(String name){
         banWordService.delete(name);
-        return "/banword";
+        return HttpStatus.OK.value();
+    }
+
+    @PutMapping("/valid")
+    public boolean isValid(@RequestBody List<String> names){
+        return banWordService.isValid(names);
     }
 }
