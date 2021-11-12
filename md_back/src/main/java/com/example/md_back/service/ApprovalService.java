@@ -4,7 +4,6 @@ package com.example.md_back.service;
 import com.example.md_back.mappers.ApprovalMapper;
 import com.example.md_back.model.Approval;
 import com.example.md_back.model.ApprovalStatus;
-import com.example.md_back.model.ApprovalType;
 import com.example.md_back.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,7 +55,7 @@ public class ApprovalService {
 
     @Transactional
     public void deleteApprovals(List<Integer> ids) {
-        for (int i : ids){
+        for (int i : ids) {
             approvalMapper.deleteApproval(i);
         }
     }
@@ -88,12 +87,12 @@ public class ApprovalService {
 //    }
 
     @Transactional(readOnly = true)
-    public Approval getApprovalById(int id){
+    public Approval getApprovalById(int id) {
         return approvalMapper.getApprovalById(id);
     }
 
     @Transactional(readOnly = true)
-    public List<Approval> getApprovals(ApprovalStatus approvalStatus){
+    public List<Approval> getApprovals(ApprovalStatus approvalStatus) {
         return approvalMapper.getApprovals(approvalStatus);
     }
 

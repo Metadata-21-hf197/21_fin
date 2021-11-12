@@ -38,7 +38,7 @@ public class TermApiController {
     @DeleteMapping("/term/{termId}")
     public int delete(@PathVariable int termId, @AuthenticationPrincipal LoginDTO loginDTO) {
         Approval approval = termService.dtoToApproval(loginDTO.getUser(), termId);
-        termService.deleteTerm(approval);
+        approvalService.insert(approval);
         return HttpStatus.OK.value();
     }
 

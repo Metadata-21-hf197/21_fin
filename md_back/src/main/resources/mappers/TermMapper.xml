@@ -39,7 +39,7 @@
         SELECT *
         FROM Term
         WHERE deleteStatus = 0
-          And (shortName = #{name} OR engName = #{name} OR korName = #{name})
+          AND (shortName = #{name} OR engName = #{name} OR korName = #{name})
     </select>
 
     <select id="getTermById" parameterType="int" resultType="com.example.md_back.model.Term">
