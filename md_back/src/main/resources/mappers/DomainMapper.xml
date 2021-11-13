@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.md_back.mappers.DomainMapper">
+    <insert id="insertDomain" parameterType="com.example.md_back.model.Domain" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Domain(shortName, engName, korName, meaning, deleteStatus, createUserId, createDate)
+        VALUES (#{shortName}, #{engName}, #{korName}, #{meaning}, 0, #{createUser.memberId}, #{createDate})
+    </insert>
+
+    <update id="updateDomain" parameterType="com.example.md_back.model.Domain">
+        UPDATE Domain
+        <set>
+        <if test="shortName != null">shortName=#{shortName},</if>
+        <if test="engName != null">engName=#{engName},</if>
+        <if test="korName != null">korName=#{korName},</if>
+        <if test="meaning != null">meaning=#{meaning},</if>
+        modifyUserId = #{modifyUser.memberId},
+        modifyDate = #{modifyDate}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateDomainByCode" parameterType="com.example.md_back.model.Approval">
+        UPDATE Domain
+        SET modifyUserId = #{createUser.memberId},
+            modifyDate   = #{createDate}
+        WHERE id = #{slaveId}
+    </update>
+
+    <update id="deleteDomain" parameterType="com.example.md_back.model.Domain">
+        UPDATE Domain
+        SET deleteStatus = 1,
+            modifyUserId = #{modifyUser.memberId},
+            modifyDate   = #{modifyDate}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getDomains" resultType="com.example.md_back.model.Domain">
+        SELECT *
+        FROM Domain
+        WHERE deleteStatus = 0
+    </select>
+
+    <select id="getDomainsByName" parameterType="String" resultType="com.example.md_back.model.Domain">
+        SELECT *
+        FROM Domain
+        WHERE deleteStatus = 0
+          And (shortName = #{name} OR engName = #{name} OR korName = #{name})
+    </select>
+
+    <select id="getDomainById" parameterType="int" resultType="com.example.md_back.model.Domain">
+        SELECT *
+        FROM Domain
+        WHERE id = #{id}
+    </select>
+
+    <select id="getDomainsByUserId" parameterType="int" resultType="com.example.md_back.model.Domain">
+        SELECT *
+        FROM Domain
+        WHERE deleteStatus = 0
+          AND (createUserId = #{userId} OR modifyUserId = #{userId})
+    </select>
+
+    <delete id="deleteDomainDB" parameterType="int">
+        DELETE
+        FROM Domain
+        WHERE id = #{id}
+    </delete>
+</mapper>

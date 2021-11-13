@@ -1,10 +1,10 @@
 package com.example.md_back.controller.api;
 
 import com.example.md_back.dto.LoginDTO;
-import com.example.md_back.dto.RequestNamesDto;
+import com.example.md_back.dto.WordDto;
+import com.example.md_back.model.Approval;
+import com.example.md_back.service.ApprovalService;
 import com.example.md_back.service.WordService;
-import com.example.md_back.user.MyAuthentication;
-import com.example.md_back.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,23 +17,26 @@ public class WordApiController {
     private WordService wordService;
 
     @Autowired
-    private UserService userService;
+    private ApprovalService approvalService;
 
     @PostMapping("/word")
-    public int insert(@RequestBody RequestNamesDto requestNamesDto, @AuthenticationPrincipal LoginDTO loginDTO) { // 세션의 유저 정보 받아 옴
-        wordService.insertWord(requestNamesDto, loginDTO.getUser());
+    public int insert(@RequestBody WordDto wordDto, @AuthenticationPrincipal LoginDTO loginDTO) {
+        Approval approval = wordService.dtoToApproval(loginDTO.getUser(), wordDto);
+        approvalService.insert(approval);
         return HttpStatus.OK.value();
     }
 
     @PutMapping("/word/{wordId}")
-    public int update(@PathVariable int wordId, @RequestBody RequestNamesDto requestNamesDto, @AuthenticationPrincipal LoginDTO loginDTO) { // 세션의 유저 정보 받아 옴
-        wordService.updateWord(wordId, requestNamesDto, loginDTO.getUser());
+    public int update(@PathVariable int wordId, @RequestBody WordDto wordDto, @AuthenticationPrincipal LoginDTO loginDTO) {
+        Approval approval = wordService.dtoToApproval(loginDTO.getUser(), wordDto, wordId);
+        approvalService.insert(approval);
         return HttpStatus.OK.value();
     }
 
     @DeleteMapping("/word/{wordId}")
     public int delete(@PathVariable int wordId, @AuthenticationPrincipal LoginDTO loginDTO) {
-        wordService.deleteWord(wordId, loginDTO.getUser());
+        Approval approval = wordService.dtoToApproval(loginDTO.getUser(), wordId);
+        approvalService.insert(approval);
         return HttpStatus.OK.value();
     }
 

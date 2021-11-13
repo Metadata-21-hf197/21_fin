@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.md_back.mappers.CodeMapper">
+    <insert id="insertCode" parameterType="com.example.md_back.model.Code" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Code(domainId, shortName, engName, korName)
+        VALUES (#{domain.id}, #{shortName}, #{engName}, #{korName})
+    </insert>
+
+    <update id="updateCode" parameterType="com.example.md_back.model.Code">
+        UPDATE Code
+        <set>
+        <if test="shortName != null">shortName=#{shortName},</if>
+        <if test="engName != null">engName=#{engName},</if>
+        <if test="korName != null">korName=#{korName},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteCode" parameterType="int">
+        DELETE
+        FROM Code
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteCodeByDomainId" parameterType="int">
+        DELETE
+        FROM Code
+        WHERE domainId = #{domainId}
+    </delete>
+
+    <select id="getCodes" resultType="com.example.md_back.model.Code">
+        SELECT *
+        FROM Code
+    </select>
+
+    <select id="getCodesByName" parameterType="String" resultType="com.example.md_back.model.Code">
+        SELECT *
+        FROM Code
+        WHERE (shortName = #{name} OR engName = #{name} OR korName = #{name})
+    </select>
+
+    <select id="getCodeById" parameterType="int" resultType="com.example.md_back.model.Code">
+        SELECT *
+        FROM Code
+        WHERE id = #{id}
+    </select>
+
+    <select id="getCodesByDomainId" parameterType="int" resultType="com.example.md_back.model.Code">
+        SELECT *
+        FROM Code
+        WHERE domainId = #{domainId}
+    </select>
+
+</mapper>

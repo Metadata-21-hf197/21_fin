@@ -33,22 +33,44 @@ public class Word {
     private String meaning;
 
     @Column(nullable = false)
-    private boolean banWord;
-
-    @Column(nullable = false)
     private boolean deleteStatus;
 
     @ManyToOne
-    @JoinColumn(name="createUserId", nullable = false)
-    private User creationUser;
+    @JoinColumn(name = "createUserId", nullable = false)
+    private User createUser;
 
     @CreationTimestamp
-    private Timestamp creationDate;
+    private Timestamp createDate;
 
     @ManyToOne
-    @JoinColumn(name="modifyUserId")
+    @JoinColumn(name = "modifyUserId")
     private User modifyUser;
 
-    @UpdateTimestamp
+    @Column
     private Timestamp modifyDate;
+
+    public void approvalToWord(Approval approval) {
+        id = approval.getTargetId();
+        if (approval.getApprovalType() == ApprovalType.DELETE) {
+            modifyUser = approval.getCreateUser();
+            modifyDate = approval.getCreateDate();
+            deleteStatus = true;
+            return;
+        } else if (approval.getApprovalType() == ApprovalType.CREATE) {
+            createUser = approval.getCreateUser();
+            createDate = approval.getCreateDate();
+            deleteStatus = false;
+        } else if (approval.getApprovalType() == ApprovalType.UPDATE) {
+            modifyUser = approval.getCreateUser();
+            modifyDate = approval.getCreateDate();
+        }
+        if (approval.getShortName() != null)
+            shortName = approval.getShortName();
+        if (approval.getEngName() != null)
+            engName = approval.getEngName();
+        if (approval.getKorName() != null)
+            korName = approval.getKorName();
+        if (approval.getMeaning() != null)
+            meaning = approval.getMeaning();
+    }
 }

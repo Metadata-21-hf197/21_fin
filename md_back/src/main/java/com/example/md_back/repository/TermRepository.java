@@ -13,9 +13,12 @@ public interface TermRepository extends JpaRepository<Term, Integer> {
 
     List<Term> findByKorName(String korName);
 
-    @Query(value = "SELECT * FROM Term WHERE korName = name OR engName = name OR shortName = name", nativeQuery = true)
+    @Query(value = "SELECT * FROM Term WHERE korName = ?1 OR engName = ?1 OR shortName = ?1 AND deleteStatus = FALSE", nativeQuery = true)
     List<Term> findByName(String name);
 
-    @Query(value = "SELECT * FROM Term WHERE banWord = FALSE", nativeQuery = true)
-    List<Term> getTrueTerms();
+    @Query(value = "SELECT * FROM Term WHERE deleteStatus = FALSE", nativeQuery = true)
+    List<Term> getTerms();
+
+    @Query(value = "SELECT * FROM Term WHERE createUserId = :#{#userId} OR modifyUserId = :#{#userId}", nativeQuery = true)
+    List<Term> findByCreateUserOrModifyUser(int userId);
 }

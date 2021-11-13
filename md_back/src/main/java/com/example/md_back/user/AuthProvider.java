@@ -23,9 +23,7 @@ public class AuthProvider implements AuthenticationProvider {
 
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String id = authentication.getName();
-        System.out.println("authentication : " + id);
         String password = authentication.getCredentials().toString();
-        System.out.println("authentication : " + password);
         return authenticate(id, password);
     }
 
@@ -39,14 +37,10 @@ public class AuthProvider implements AuthenticationProvider {
 
         LoginDTO principal = (LoginDTO) userService.loadUserByUsername(id);
         User pUser = principal.getUser();
-        System.out.println(principal.getUser().getMemberName());
         principal.setUsername(pUser.getMemberName());
-        System.out.println(principal);
         if(principal == null) {
-            System.out.println("DTO is null");
             throw new UsernameNotFoundException("wrongid");
         } else if(principal != null && !principal.getPassword().equals(password)) {
-            System.out.println("DTO is not null");
             throw new BadCredentialsException("wrongpw");
         }
 

@@ -1,146 +1,230 @@
 package com.example.md_back.service;
 
-import com.example.md_back.dto.RequestDomainDto;
-import com.example.md_back.dto.RequestNamesDto;
-import com.example.md_back.model.Code;
-import com.example.md_back.model.Domain;
-import com.example.md_back.model.User;
-import com.example.md_back.repository.CodeRepository;
-import com.example.md_back.repository.DomainRepository;
+import com.example.md_back.dto.CodeDto;
+import com.example.md_back.dto.DomainDto;
+import com.example.md_back.mappers.CodeMapper;
+import com.example.md_back.mappers.DomainMapper;
+import com.example.md_back.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class DomainService {
 
     @Autowired
-    private DomainRepository domainRepository;
+    private DomainMapper domainMapper;
 
     @Autowired
-    private CodeRepository codeRepository;
+    private CodeMapper codeMapper;
 
     @Transactional
-    public void insertDomain(RequestDomainDto requestDomainDto, User user) {
-        Domain domain = Domain.builder()
-                .shortName(requestDomainDto.getShortName())
-                .engName(requestDomainDto.getEngName())
-                .korName(requestDomainDto.getKorName())
-                .banWord(requestDomainDto.isBanWord())
-                .type(requestDomainDto.getType())
-                .meaning(requestDomainDto.getMeaning())
-                .creationUser(user)
-                .deleteStatus(false)
-                .build();
-        domainRepository.save(domain);
+    public void insertDomain(Approval approval) {
+        Domain domain = new Domain();
+        domain.approvalToDomain(approval);
+        domainMapper.insertDomain(domain);
     }
 
     @Transactional
-    public void updateDomain(int domainId, RequestDomainDto requestDomainDto, User user) {
-        Domain domain = domainRepository.findById(domainId)
-                .orElseThrow(() -> new IllegalArgumentException("도메인 수정 실패 : 도메인을 찾을 수 없습니다."));
-        domain.setShortName(requestDomainDto.getShortName());
-        domain.setEngName(requestDomainDto.getEngName());
-        domain.setKorName(requestDomainDto.getKorName());
-        domain.setMeaning(requestDomainDto.getMeaning());
-        domain.setType(requestDomainDto.getType());
-        domain.setBanWord(requestDomainDto.isBanWord());
-        domain.setModifyUser(user);
-        domainRepository.save(domain);
+    public void updateDomain(Approval approval) {
+        Domain domain = domainMapper.getDomainById(approval.getTargetId());
+        if (domain == null) throw new IllegalArgumentException("도메인 수정 실패 : 도메인을 찾을 수 없습니다.");
+        else if (domain.isDeleteStatus()) throw new IllegalArgumentException("도메인 수정 실패 : 삭제된 도메인입니다.");
+
+        domain.approvalToDomain(approval);
+        domainMapper.updateDomain(domain);
     }
 
     @Transactional
-    public void deleteDomain(int domainId, User user) {
-        Domain domain = domainRepository.findById(domainId)
-                .orElseThrow(() -> new IllegalArgumentException("도메인 삭제 실패 : 도메인을 찾을 수 없습니다."));
-        domain.setDeleteStatus(true);
-        domain.setModifyUser(user);
-        domainRepository.save(domain);
+    public void deleteDomain(Approval approval) {
+        Domain domain = domainMapper.getDomainById(approval.getTargetId());
+        if (domain == null) throw new IllegalArgumentException("도메인 삭제 실패 : 도메인을 찾을 수 없습니다.");
+        else if (domain.isDeleteStatus()) throw new IllegalArgumentException("도메인 삭제 실패 : 삭제된 도메인입니다.");
+
+        domain.approvalToDomain(approval);
+        codeMapper.deleteCodeByDomainId(approval.getTargetId()); // CASCADE?
+        domainMapper.deleteDomain(domain);
     }
 
     @Transactional
     public void deleteDomainDB(int domainId) {
-        domainRepository.deleteById(domainId);
+        domainMapper.deleteDomainDB(domainId);
     }
 
     @Transactional
-    public void addCode(int domainId, RequestNamesDto requestNamesDto, User user) {
-        Domain domain = domainRepository.findById(domainId)
-                .orElseThrow(() -> new IllegalArgumentException("코드 추가 실패 : 도메인을 찾을 수 없습니다."));
-        //if(domain.getCodes().contains(requestNamesDto.getEngName())) {
-        //  return new IllegalArgumentException("코드 추가 실패 : 이미 존재하는 코드입니다.");
-        //}
-        Code code = Code.builder()
-                .shortName(requestNamesDto.getShortName())
-                .engName(requestNamesDto.getEngName())
-                .korName(requestNamesDto.getKorName())
-                .domain(domain)
+    public void addCode(Approval approval) {
+        Domain domain = domainMapper.getDomainById(approval.getSlaveId());
+        if (domain == null) throw new IllegalArgumentException("코드 추가 실패 : 도메인을 찾을 수 없습니다.");
+        else if (domain.isDeleteStatus()) throw new IllegalArgumentException("코드 추가 실패 : 삭제된 도메인입니다.");
+
+        Code code = new Code();
+        code.approvalToCode(approval);
+        code.setDomain(domain); // ????
+        codeMapper.insertCode(code);
+        domainMapper.updateDomainByCode(approval);
+    }
+
+    @Transactional
+    public void updateCode(Approval approval) {
+        Domain domain = domainMapper.getDomainById(approval.getSlaveId());
+        if (domain == null) throw new IllegalArgumentException("코드 수정 실패 : 도메인을 찾을 수 없습니다.");
+        else if (domain.isDeleteStatus()) throw new IllegalArgumentException("코드 수정 실패 : 삭제된 도메인입니다.");
+
+        Code code = codeMapper.getCodeById(approval.getTargetId());
+        if (code == null) throw new IllegalArgumentException("코드 수정 실패 : 코드를 찾을 수 없습니다.");
+
+        code.approvalToCode(approval);
+        code.setDomain(domain); // ???
+        codeMapper.updateCode(code);
+        domainMapper.updateDomainByCode(approval);
+    }
+
+    @Transactional
+    public void deleteCode(Approval approval) {
+        Domain domain = domainMapper.getDomainById(approval.getSlaveId());
+        if (domain == null) throw new IllegalArgumentException("코드 삭제 실패 : 도메인을 찾을 수 없습니다.");
+
+        codeMapper.deleteCode(approval.getTargetId());
+        domainMapper.updateDomainByCode(approval);
+    }
+
+    @Transactional
+    public Approval dtoToApproval(User user, DomainDto domainDto, int targetId) {  // UPDATE DOMAIN
+        Domain domain = domainMapper.getDomainById(targetId);
+        if (domain == null) throw new IllegalArgumentException("결재 생성 실패 : 도메인을 찾을 수 없습니다.");
+        else if (domain.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 삭제된 도메인입니다.");
+
+        Approval approval = Approval.builder()
+                .createUser(user)
+                .targetId(targetId)
+                .approvalType(ApprovalType.UPDATE)
+                .wordType(WordType.DOMAIN)
                 .build();
-        codeRepository.save(code);
-        domain.setModifyUser(user);
-        domainRepository.save(domain);
+
+        if (Objects.equals(domain.getEngName(), domainDto.getEngName())) approval.setEngName(null);
+        else approval.setEngName(domainDto.getEngName());
+        if (Objects.equals(domain.getKorName(), domainDto.getKorName())) approval.setKorName(null);
+        else approval.setKorName(domainDto.getKorName());
+        if (Objects.equals(domain.getShortName(), domainDto.getShortName())) approval.setShortName(null);
+        else approval.setShortName(domainDto.getShortName());
+        if (Objects.equals(domain.getMeaning(), domainDto.getMeaning())) approval.setMeaning(null);
+        else approval.setMeaning(domainDto.getMeaning());
+
+        return approval;
     }
 
     @Transactional
-    public void updateCode(int domainId, int codeId, RequestNamesDto requestNamesDto, User user) {
-        Domain domain = domainRepository.findById(domainId)
-                .orElseThrow(() -> new IllegalArgumentException("코드 수정 실패 : 도메인을 찾을 수 없습니다."));
+    public Approval dtoToApproval(User user, CodeDto codeDto, int targetId, int slaveId) {  // UPDATE CODE
+        Domain domain = domainMapper.getDomainById(slaveId);
+        if (domain == null) throw new IllegalArgumentException("결재 생성 실패 : 도메인을 찾을 수 없습니다.");
+        else if (domain.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 삭제된 도메인입니다.");
 
-        Code code = codeRepository.findById(codeId)
-                .orElseThrow(() -> new IllegalArgumentException("코드 수정 실패 : 코드를 찾을 수 없습니다."));
-        code.setShortName(requestNamesDto.getShortName());
-        code.setEngName(requestNamesDto.getEngName());
-        code.setKorName(requestNamesDto.getKorName());
-        domain.setModifyUser(user);
-        codeRepository.save(code);
-        domainRepository.save(domain);
+        Code code = codeMapper.getCodeById(targetId);
+        if (code == null) throw new IllegalArgumentException("결재 생성 실패 : 코드를 찾을 수 없습니다.");
+
+        Approval approval = Approval.builder()
+                .createUser(user)
+                .targetId(targetId)
+                .slaveId(slaveId)
+                .approvalType(ApprovalType.UPDATE)
+                .wordType(WordType.CODE)
+                .build();
+
+        if (Objects.equals(code.getEngName(), codeDto.getEngName())) approval.setEngName(null);
+        else approval.setEngName(codeDto.getEngName());
+        if (Objects.equals(code.getKorName(), codeDto.getKorName())) approval.setKorName(null);
+        else approval.setKorName(codeDto.getKorName());
+        if (Objects.equals(code.getShortName(), codeDto.getShortName())) approval.setShortName(null);
+        else approval.setShortName(codeDto.getShortName());
+        return approval;
     }
 
     @Transactional
-    public void deleteCode(int domainId, int codeId, User user) {
-        Domain domain = domainRepository.findById(domainId)
-                .orElseThrow(() -> new IllegalArgumentException("코드 삭제 실패 : 도메인을 찾을 수 없습니다."));
-        domain.setModifyUser(user);
-        codeRepository.deleteById(codeId);
-        domainRepository.save(domain);
+    public Approval dtoToApproval(User user, DomainDto domainDto) { // CREATE DOMAIN
+        return Approval.builder()
+                .createUser(user)
+                .targetId(0)
+                .approvalType(ApprovalType.CREATE)
+                .wordType(WordType.DOMAIN)
+                .engName(domainDto.getEngName())
+                .korName(domainDto.getKorName())
+                .shortName(domainDto.getShortName())
+                .meaning(domainDto.getMeaning())
+                .build();
     }
+
+    @Transactional
+    public Approval dtoToApproval(User user, CodeDto codeDto, int slaveId) { // CREATE CODE
+        Domain domain = domainMapper.getDomainById(slaveId);
+        if (domain == null) throw new IllegalArgumentException("결재 생성 실패 : 도메인을 찾을 수 없습니다.");
+        else if (domain.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 삭제된 도메인입니다.");
+        return Approval.builder()
+                .createUser(user)
+                .targetId(0)
+                .slaveId(slaveId)
+                .approvalType(ApprovalType.CREATE)
+                .wordType(WordType.CODE)
+                .engName(codeDto.getEngName())
+                .korName(codeDto.getKorName())
+                .shortName(codeDto.getShortName())
+                .build();
+    }
+
+    @Transactional
+    public Approval dtoToApproval(User user, int targetId) { // DELETE DOMAIN
+        Domain domain = domainMapper.getDomainById(targetId);
+        if (domain == null) throw new IllegalArgumentException("결재 생성 실패 : 도메인을 찾을 수 없습니다.");
+        else if (domain.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 삭제된 도메인입니다.");
+        return Approval.builder()
+                .createUser(user)
+                .targetId(targetId)
+                .approvalType(ApprovalType.DELETE)
+                .wordType(WordType.DOMAIN)
+                .build();
+    }
+
+    @Transactional
+    public Approval dtoToApproval(User user, int targetId, int slaveId) { // DELETE CODE
+        Domain domain = domainMapper.getDomainById(slaveId);
+        if (domain == null) throw new IllegalArgumentException("결재 생성 실패 : 도메인을 찾을 수 없습니다.");
+        else if (domain.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 삭제된 도메인입니다.");
+        else if (codeMapper.getCodeById(targetId) == null)
+            throw new IllegalArgumentException("결재 생성 실패 : 코드를 찾을 수 없습니다.");
+        return Approval.builder()
+                .createUser(user)
+                .targetId(targetId)
+                .slaveId(slaveId)
+                .approvalType(ApprovalType.DELETE)
+                .wordType(WordType.CODE)
+                .build();
+    }
+
 
     @Transactional(readOnly = true)
     public Domain findById(int domainId) {
-        return domainRepository.findById(domainId)
-                .orElseThrow(() -> new IllegalArgumentException("도메인 찾기 실패 : " + domainId));
-    }
-
-    @Transactional(readOnly = true)
-    public List<Domain> findByShortName(String shortName) {
-        return domainRepository.findByShortName(shortName);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Domain> findByEngName(String engName) {
-        return domainRepository.findByEngName(engName);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Domain> findByKorName(String korName) {
-        return domainRepository.findByKorName(korName);
+        return domainMapper.getDomainById(domainId);
     }
 
     @Transactional(readOnly = true)
     public List<Domain> findByName(String name) {
-        return domainRepository.findByKorName(name);
+        return domainMapper.getDomainsByName(name);
     }
 
     @Transactional(readOnly = true)
-    public Code findByIdCode(int codeId) {
-        return codeRepository.findById(codeId)
-                .orElseThrow(() -> new IllegalArgumentException("코드 찾기 실패 : " + codeId));
+    public Code findCodeById(int codeId) {
+        return codeMapper.getCodeById(codeId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Domain> getDomainListByUserid(int userId) {
+        return domainMapper.getDomainsByUserId(userId);
     }
 
     @Transactional(readOnly = true)
     public List<Domain> getDomains() {
-        return domainRepository.getTrueDomains();
+        return domainMapper.getDomains();
     }
 }

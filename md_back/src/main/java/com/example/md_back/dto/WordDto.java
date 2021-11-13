@@ -1,13 +1,13 @@
 package com.example.md_back.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-public class RequestDomainDto {
+@Setter
+public class WordDto {
     private String shortName;
     private String engName;
     private String korName;
     private String meaning;
-    private String type;
-    private boolean banWord;
 }
