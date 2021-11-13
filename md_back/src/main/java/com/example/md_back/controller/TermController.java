@@ -12,12 +12,12 @@ public class TermController {
     @Autowired
     private TermService termService;
 
-    @GetMapping("/table/term/insertForm")
+    @GetMapping("/table/term/insert")
     public String insertForm() {
         return "term/insertForm";
     }
 
-    @GetMapping("/table/term/{termId}/updateForm")
+    @GetMapping("/table/term/{termId}/update")
     public String updateForm(Model model, @PathVariable int termId) {
         model.addAttribute("term", termService.findById(termId));
         return "term/updateForm";

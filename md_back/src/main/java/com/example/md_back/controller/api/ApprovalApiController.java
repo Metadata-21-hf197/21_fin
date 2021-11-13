@@ -80,7 +80,7 @@ public class ApprovalApiController {
     }
 
     @DeleteMapping("/approval/{approvalId}")
-    public int approvalDelete(@PathVariable int approvalId) {
+    public int approvalDelete(@PathVariable int approvalId, @AuthenticationPrincipal LoginDTO loginDTO) {
         approvalService.delete(approvalId);
         return HttpStatus.OK.value();
     }
