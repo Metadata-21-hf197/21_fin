@@ -42,10 +42,10 @@ public class UserConfig extends WebSecurityConfigurerAdapter {
         //권한 불필요한 URI : antMatchers("URI").permitAll()
         http.authorizeRequests()
                 //security_login
-                .antMatchers("/mypage/**").authenticated()
-                .antMatchers("/word/**").authenticated()
-                .antMatchers("/term/**").authenticated()
-                .antMatchers("/domain/**").authenticated()
+//                .antMatchers("/mypage/**").authenticated()
+//                .antMatchers("/word/**").authenticated()
+//                .antMatchers("/term/**").authenticated()
+//                .antMatchers("/domain/**").authenticated()
                 //permitAll
                 .antMatchers("/**").permitAll()
                 .and()
