@@ -7,6 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 public class WordController {
 
@@ -14,9 +17,10 @@ public class WordController {
     private WordService wordService;
 
     @GetMapping("/table/word")
-    public String wordHome(Model model) {
-        model.addAttribute("words", wordService.getWords());
-        return "table/word";
+    public Map<String, Object> wordHome(Model model) {
+        Map<String, Object> res = new HashMap<>();
+        res.put("words", wordService.getWords());
+        return res;
     }
 
     @GetMapping("/table/word/insert")
