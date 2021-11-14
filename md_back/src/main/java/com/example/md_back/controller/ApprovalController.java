@@ -38,13 +38,4 @@ public class ApprovalController {
     public String deleteForm(){
         return "approval/deleteForm";
     }
-
-    @GetMapping("/table/approval/{id}")
-    public Map<String, Object> approvalDetail(@PathVariable int id){
-        Map<String, Object> res = new HashMap<>();
-        res.put("url", "approval/detail");
-        res.put("approval", approvalService.getApprovalById(id));
-        return res;
-
-    }
 }

@@ -12,10 +12,10 @@ import com.example.md_back.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class ApprovalApiController {
@@ -31,6 +31,23 @@ public class ApprovalApiController {
 
     @Autowired
     private DomainService domainService;
+
+    @GetMapping("/table/approval/{id}")
+    public Map<String, Object> approvalDetail(@PathVariable int id) {
+        Map<String, Object> res = new HashMap<>();
+        res.put("url", "approval/detail");
+        Approval approval = approvalService.getApprovalById(id);
+        Object o;
+        if(approval.getWordType() == WordType.WORD)  o = wordService.findById(approval.getTargetId());
+        else if(approval.getWordType() == WordType.TERM) o= termService.findById(approval.getTargetId());
+        else if(approval.getWordType() == WordType.DOMAIN) o=domainService.findById(approval.getTargetId());
+        else if(approval.getWordType() == WordType.CODE) o=domainService.findCodeById(approval.getTargetId());
+        else if(approval.getWordType() == WordType.TERMWORD) o=termService.findById(approval.getTargetId());
+        else throw new IllegalArgumentException("결재 처리 실패 : 잘못된 결재입니다.");
+        res.put("approval", approval);
+        res.put("basic", o);
+        return res;
+    }
 
 
     @PutMapping("/approval/confirm/{approvalId}")

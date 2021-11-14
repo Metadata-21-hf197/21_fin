@@ -1,6 +1,7 @@
 package com.example.md_back.model;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -49,6 +50,7 @@ public class Approval {
     @JoinColumn(name = "createUserId", nullable = false)
     private User createUser;
 
+    @CreationTimestamp
     @Column(nullable = false)
     private Timestamp createDate;
 
