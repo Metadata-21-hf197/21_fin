@@ -1,12 +1,18 @@
 package com.example.md_back.controller;
 
+import com.example.md_back.model.Term;
 import com.example.md_back.service.TermService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
 public class TermController {
 
     @Autowired
@@ -18,20 +24,30 @@ public class TermController {
     }
 
     @GetMapping("/table/term/{termId}/update")
-    public String updateForm(Model model, @PathVariable int termId) {
-        model.addAttribute("term", termService.findById(termId));
-        return "term/updateForm";
+    public Map<String, Object> updateForm(Model model, @PathVariable int termId) {
+        Term term = termService.findById(termId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("url", "term/updateForm");
+        map.put("term", term);
+        return map;
     }
 
     @GetMapping("/table/term/{termId}")
-    public String termDetail(Model model, @PathVariable int termId){
-        model.addAttribute("term", termService.findById(termId));
-        return "term/detail";
+    public Map<String, Object> termDetail(Model model, @PathVariable int termId){
+        Term term = termService.findById(termId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("url", "term/detail");
+        map.put("term", term);
+        return map;
     }
 
     @GetMapping("/table/term")
-    public String termHome(Model model) {
-        model.addAttribute("terms", termService.getTerms());
-        return "table/term";
+    public Map<String, Object> termHome(Model model) {
+        Map<String, Object> map = new HashMap<>();
+        List<Term> termList = new ArrayList();
+
+        termList = termService.getTerms();
+        map.put("termList", termList);
+        return map;
     }
 }
