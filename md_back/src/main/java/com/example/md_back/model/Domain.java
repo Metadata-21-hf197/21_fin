@@ -22,13 +22,13 @@ public class Domain {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = true, length = 100)
+    @Column(length = 100)
     private String shortName;
 
     @Column(nullable = false, length = 100)
     private String engName;
 
-    @Column(nullable = true, length = 100)
+    @Column(length = 100)
     private String korName;
 
     @Lob
@@ -42,27 +42,27 @@ public class Domain {
     private boolean deleteStatus;
 
     @ManyToOne
-    @JoinColumn(name="createUserId", nullable = false)
+    @JoinColumn(name = "createUserId", nullable = false)
     private User createUser;
 
     @CreationTimestamp
     private Timestamp createDate;
 
     @ManyToOne
-    @JoinColumn(name="modifyUserId")
+    @JoinColumn(name = "modifyUserId")
     private User modifyUser;
 
     @UpdateTimestamp
     private Timestamp modifyDate;
 
     public void approvalToDomain(Approval approval) {
-        if (approval.getShortName() != null)
+        if (approval.getShortName() != null && approval.getShortName().length() > 0)
             shortName = approval.getShortName();
-        if (approval.getEngName() != null)
+        if (approval.getEngName() != null && approval.getEngName().length() > 0)
             engName = approval.getEngName();
-        if (approval.getKorName() != null)
+        if (approval.getKorName() != null && approval.getKorName().length() > 0)
             korName = approval.getKorName();
-        if (approval.getMeaning() != null)
+        if (approval.getMeaning() != null && approval.getMeaning().length() > 0)
             meaning = approval.getMeaning();
         if (approval.getApprovalType() == ApprovalType.DELETE) {
             deleteStatus = true;

@@ -20,13 +20,13 @@ public class Word {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = true, length = 100)
+    @Column(length = 100)
     private String shortName;
 
     @Column(nullable = false, length = 100)
     private String engName;
 
-    @Column(nullable = true, length = 100)
+    @Column(length = 100)
     private String korName;
 
     @Lob
@@ -64,13 +64,13 @@ public class Word {
             modifyUser = approval.getCreateUser();
             modifyDate = approval.getCreateDate();
         }
-        if (approval.getShortName() != null)
+        if (approval.getShortName() != null && approval.getShortName().length() > 0)
             shortName = approval.getShortName();
-        if (approval.getEngName() != null)
+        if (approval.getEngName() != null && approval.getEngName().length() > 0)
             engName = approval.getEngName();
-        if (approval.getKorName() != null)
+        if (approval.getKorName() != null && approval.getKorName().length() > 0)
             korName = approval.getKorName();
-        if (approval.getMeaning() != null)
+        if (approval.getMeaning() != null && approval.getMeaning().length() > 0)
             meaning = approval.getMeaning();
     }
 }
