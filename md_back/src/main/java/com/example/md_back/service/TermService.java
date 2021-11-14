@@ -75,6 +75,7 @@ public class TermService {
 
     @Transactional
     public List<Approval> dtoToApproval(User user, TermDto termDto, int targetId) {  // UPDATE
+        if (termDto.getEngName() == null)throw new IllegalArgumentException("결재 생성 실패 : 영문명이 공백입니다.");
         Term term = termMapper.getTermById(targetId);
         if (term == null) throw new IllegalArgumentException("결재 생성 실패 : 용어를 찾을 수 없습니다.");
         else if (term.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 삭제된 용어입니다.");
@@ -134,6 +135,7 @@ public class TermService {
 
     @Transactional
     public Approval dtoToApproval(User user, TermDto termDto) {  // CREATE
+        if (termDto.getEngName() == null)throw new IllegalArgumentException("결재 생성 실패 : 영문명이 공백입니다.");
         return Approval.builder()
                 .createUser(user)
                 .targetId(0)

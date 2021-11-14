@@ -93,6 +93,7 @@ public class DomainService {
 
     @Transactional
     public Approval dtoToApproval(User user, DomainDto domainDto, int targetId) {  // UPDATE DOMAIN
+        if (domainDto.getEngName() == null)throw new IllegalArgumentException("결재 생성 실패 : 영문명이 공백입니다.");
         Domain domain = domainMapper.getDomainById(targetId);
         if (domain == null) throw new IllegalArgumentException("결재 생성 실패 : 도메인을 찾을 수 없습니다.");
         else if (domain.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 삭제된 도메인입니다.");
@@ -118,6 +119,7 @@ public class DomainService {
 
     @Transactional
     public Approval dtoToApproval(User user, CodeDto codeDto, int targetId, int slaveId) {  // UPDATE CODE
+        if (codeDto.getEngName() == null)throw new IllegalArgumentException("결재 생성 실패 : 영문명이 공백입니다.");
         Domain domain = domainMapper.getDomainById(slaveId);
         if (domain == null) throw new IllegalArgumentException("결재 생성 실패 : 도메인을 찾을 수 없습니다.");
         else if (domain.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 삭제된 도메인입니다.");
@@ -144,6 +146,7 @@ public class DomainService {
 
     @Transactional
     public Approval dtoToApproval(User user, DomainDto domainDto) { // CREATE DOMAIN
+        if (domainDto.getEngName() == null)throw new IllegalArgumentException("결재 생성 실패 : 영문명이 공백입니다.");
         return Approval.builder()
                 .createUser(user)
                 .targetId(0)
@@ -158,6 +161,7 @@ public class DomainService {
 
     @Transactional
     public Approval dtoToApproval(User user, CodeDto codeDto, int slaveId) { // CREATE CODE
+        if (codeDto.getEngName() == null)throw new IllegalArgumentException("결재 생성 실패 : 영문명이 공백입니다.");
         Domain domain = domainMapper.getDomainById(slaveId);
         if (domain == null) throw new IllegalArgumentException("결재 생성 실패 : 도메인을 찾을 수 없습니다.");
         else if (domain.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 삭제된 도메인입니다.");
