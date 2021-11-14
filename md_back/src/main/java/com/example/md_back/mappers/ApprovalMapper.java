@@ -10,7 +10,7 @@ import java.util.List;
 public interface ApprovalMapper {
 
     Approval getApprovalById(int approvalId);
-    List<Approval> getApprovals(ApprovalStatus approvalStatus);
+    List<Approval> getApprovals(int approvalStatus);
     List<Approval> getApprovalsByCreateUserId(int userId);
     List<Approval> getApprovalsByConfirmUserId(int userId);
     void insertApproval(Approval approval);

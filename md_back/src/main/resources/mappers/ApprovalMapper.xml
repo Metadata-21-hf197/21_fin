@@ -35,11 +35,11 @@
         WHERE approvalId = #{approvalId}
     </select>
 
-    <select id="getApprovals" parameterType="com.example.md_back.model.ApprovalStatus"
+    <select id="getApprovals" parameterType="int"
             resultType="com.example.md_back.model.Approval">
         SELECT *
         FROM Approval
-        WHERE appprovalStatus = #{approvalStatus.value}
+        WHERE approvalStatus = #{approvalStatus}
     </select>
 
     <select id="getApprovalsByCreateUserId" parameterType="int" resultType="com.example.md_back.model.Approval">

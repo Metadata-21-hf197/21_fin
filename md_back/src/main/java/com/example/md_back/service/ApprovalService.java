@@ -93,7 +93,7 @@ public class ApprovalService {
 
     @Transactional(readOnly = true)
     public List<Approval> getApprovals(ApprovalStatus approvalStatus) {
-        return approvalMapper.getApprovals(approvalStatus);
+        return approvalMapper.getApprovals(approvalStatus.getValue());
     }
 
     @Transactional(readOnly = true)
