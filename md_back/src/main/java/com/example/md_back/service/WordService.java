@@ -49,6 +49,7 @@ public class WordService {
     @Transactional
     public Approval dtoToApproval(User user, WordDto wordDto, int targetId) {  // UPDATE
         Word word = wordMapper.getWordById(targetId);
+        if (wordDto.getEngName() == null)throw new IllegalArgumentException("결재 생성 실패 : 영문명이 공백입니다.");
         if (word == null) throw new IllegalArgumentException("결재 생성 실패 : 단어를 찾을 수 없습니다.");
         else if (word.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 이미 삭제된 단어입니다.");
 
@@ -77,13 +78,13 @@ public class WordService {
 
     @Transactional
     public Approval dtoToApproval(User user, WordDto wordDto) {  // CREATE
+        if (wordDto.getEngName() == null)throw new IllegalArgumentException("결재 생성 실패 : 영문명이 공백입니다.");
         Approval approval = new Approval();
         approval.setCreateUser(user);
         approval.setTargetId(0);
         approval.setApprovalType(ApprovalType.CREATE);
         approval.setWordType(WordType.WORD);
         // headers
-
         approval.setEngName(wordDto.getEngName());
         approval.setKorName(wordDto.getKorName());
         approval.setShortName(wordDto.getShortName());

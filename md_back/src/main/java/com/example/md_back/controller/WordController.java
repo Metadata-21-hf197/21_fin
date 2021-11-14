@@ -18,7 +18,6 @@ public class WordController {
     public Map<String, Object> wordHome(Model model) {
         Map<String, Object> res = new HashMap<>();
         res.put("words", wordService.getWords());
-        System.out.println(wordService.getWords());
         return res;
     }
 
