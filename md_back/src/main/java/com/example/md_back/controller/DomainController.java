@@ -20,10 +20,9 @@ public class DomainController {
     private DomainService domainService;
 
     @GetMapping("/table/domain")
-    @ResponseBody
     public Map<String, Object> domainHome(Model model) {
         Map<String, Object> map = new HashMap<>();
-        List<Domain> domainList = new ArrayList();
+        List<Domain> domainList = domainService.getDomains();
 
         map.put("domainList", domainList);
         return map;
