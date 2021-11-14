@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 public class TermController {
 
     @Autowired
@@ -24,15 +24,21 @@ public class TermController {
     }
 
     @GetMapping("/table/term/{termId}/update")
-    public String updateForm(Model model, @PathVariable int termId) {
-        model.addAttribute("term", termService.findById(termId));
-        return "term/updateForm";
+    public Map<String, Object> updateForm(Model model, @PathVariable int termId) {
+        Term term = termService.findById(termId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("url", "term/updateForm");
+        map.put("term", term);
+        return map;
     }
 
     @GetMapping("/table/term/{termId}")
-    public String termDetail(Model model, @PathVariable int termId){
-        model.addAttribute("term", termService.findById(termId));
-        return "term/detail";
+    public Map<String, Object> termDetail(Model model, @PathVariable int termId){
+        Term term = termService.findById(termId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("url", "term/detail");
+        map.put("term", term);
+        return map;
     }
 
     @GetMapping("/table/term")
