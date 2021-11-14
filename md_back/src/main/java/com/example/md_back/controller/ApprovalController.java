@@ -3,21 +3,24 @@ package com.example.md_back.controller;
 import com.example.md_back.model.ApprovalStatus;
 import com.example.md_back.service.ApprovalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
 public class ApprovalController {
 
     @Autowired
     private ApprovalService approvalService;
 
     @GetMapping("/table/approval")
-    public String home(Model model){
-        model.addAttribute("approvals", approvalService.getApprovals(ApprovalStatus.Pending));
-        return "table/approval";
+    public Map<String, Object> home(){
+        Map<String, Object> res = new HashMap<>();
+        res.put("Approvals", approvalService.getApprovals(ApprovalStatus.Pending));
+        return res;
     }
 
     @GetMapping("/table/approval/insert")
@@ -27,6 +30,7 @@ public class ApprovalController {
 
     @GetMapping("/table/approval/update")
     public String updateForm(){
+        Map <String ,Object> res = new HashMap<>();
         return "approval/updateForm";
     }
 
@@ -36,8 +40,11 @@ public class ApprovalController {
     }
 
     @GetMapping("/table/approval/{id}")
-    public String approvalDetail(@PathVariable int id, Model model){
-        model.addAttribute("approval", approvalService.getApprovalById(id));
-        return "approval/detail";
+    public Map<String, Object> approvalDetail(@PathVariable int id){
+        Map<String, Object> res = new HashMap<>();
+        res.put("url", "approval/detail");
+        res.put("approval", approvalService.getApprovalById(id));
+        return res;
+
     }
 }
