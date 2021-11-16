@@ -17,7 +17,6 @@ public class LogInOutController {
 
     @GetMapping("/user/login")
     public String loginForm(@ModelAttribute("login") LoginDTO login, HttpServletRequest request) {
-        System.out.println("login Controller in");
         return "user/login";
     }
 
