@@ -25,7 +25,7 @@
         <association property="createUser" column="createUserId" select="getUserById"/>
     </resultMap>
 
-    <select id="getUserById" parameterType="int" resultMap="com.example.md_back.model.User">
+    <select id="getUserById" parameterType="int" resultType="com.example.md_back.model.User">
         select memberId, memberName, email, userRole
         FROM User
         WHERE memberId = #{memberId}
