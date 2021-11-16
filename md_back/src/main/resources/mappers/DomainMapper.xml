@@ -9,6 +9,43 @@
         VALUES (#{shortName}, #{engName}, #{korName}, #{meaning}, 0, #{createUser.memberId}, #{createDate})
     </insert>
 
+    <resultMap id="domainDetail" type="com.example.md_back.model.Domain">
+        <id property="id" column="id"/>
+        <result property="shortName" column="shortName"/>
+        <result property="engName" column="engName"/>
+        <result property="korName" column="korName"/>
+        <result property="meaning" column="meaning"/>
+        <result property="createDate" column="createDate"/>
+        <result property="confirmDate" column="confirmDate"/>
+        <association property="createUser" column="createUserId" select="getUserById"/>
+        <association property="confirmUser" column="confirmUserId" select="getUserById"/>
+        <collection property="code" column="code" select="getCodeByDomain"/>
+    </resultMap>
+
+    <resultMap id="domainTable" type="com.example.md_back.model.Domain">
+        <id property="id" column="id"/>
+        <result property="shortName" column="shortName"/>
+        <result property="engName" column="engName"/>
+        <result property="korName" column="korName"/>
+        <result property="meaning" column="meaning"/>
+        <result property="createDate" column="createDate"/>
+        <association property="createUser" column="createUserId" select="getUserById"/>
+    </resultMap>
+
+
+    <select id="getUserById" parameterType="int" resultType="com.example.md_back.model.User">
+        select memberId, memberName, email, userRole
+        FROM User
+        WHERE memberId = #{memberId}
+    </select>
+
+    <select id="getCodeByDomain" parameterType="int" resultType="com.example.md_back.model.Code">
+        select id, engName, korName, shortName, domainId
+        FROM Code
+        WHERE domainId = #{domainId}
+    </select>
+
+
     <update id="updateDomain" parameterType="com.example.md_back.model.Domain">
         UPDATE Domain
         <set>
@@ -37,26 +74,26 @@
         WHERE id = #{id}
     </update>
 
-    <select id="getDomains" resultType="com.example.md_back.model.Domain">
+    <select id="getDomains" resultMap="domainTable">
         SELECT *
         FROM Domain
         WHERE deleteStatus = 0
     </select>
 
-    <select id="getDomainsByName" parameterType="String" resultType="com.example.md_back.model.Domain">
+    <select id="getDomainsByName" parameterType="String" resultMap="domainDetail">
         SELECT *
         FROM Domain
         WHERE deleteStatus = 0
           And (shortName = #{name} OR engName = #{name} OR korName = #{name})
     </select>
 
-    <select id="getDomainById" parameterType="int" resultType="com.example.md_back.model.Domain">
+    <select id="getDomainById" parameterType="int" resultMap="domainDetail">
         SELECT *
         FROM Domain
         WHERE id = #{id}
     </select>
 
-    <select id="getDomainsByUserId" parameterType="int" resultType="com.example.md_back.model.Domain">
+    <select id="getDomainsByUserId" parameterType="int" resultMap="domainTable">
         SELECT *
         FROM Domain
         WHERE deleteStatus = 0
