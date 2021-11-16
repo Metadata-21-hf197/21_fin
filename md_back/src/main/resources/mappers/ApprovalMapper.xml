@@ -24,7 +24,7 @@
     </resultMap>
 
     <select id="getUserById" parameterType="int" resultType="com.example.md_back.model.User">
-        select memberId, memberName, email, quitStatus, userRole
+        select memberId, memberName, email, userRole
         FROM User
         WHERE memberId = #{memberId}
     </select>
@@ -35,20 +35,19 @@
         WHERE approvalId = #{approvalId}
     </select>
 
-    <select id="getApprovals" parameterType="int"
-            resultType="com.example.md_back.model.Approval">
+    <select id="getApprovals" parameterType="int" resultMap="approvalUser">
         SELECT *
         FROM Approval
         WHERE approvalStatus = #{approvalStatus}
     </select>
 
-    <select id="getApprovalsByCreateUserId" parameterType="int" resultType="com.example.md_back.model.Approval">
+    <select id="getApprovalsByCreateUserId" parameterType="int" resultMap="approvalUser">
         SELECT *
         FROM Approval
         WHERE createUserId = #{userId}
     </select>
 
-    <select id="getApprovalsByConfirmUserId" parameterType="int" resultType="com.example.md_back.model.Approval">
+    <select id="getApprovalsByConfirmUserId" parameterType="int" resultMap="approvalUser">
         SELECT *
         FROM Approval
         WHERE confirmUserId = #{userId}

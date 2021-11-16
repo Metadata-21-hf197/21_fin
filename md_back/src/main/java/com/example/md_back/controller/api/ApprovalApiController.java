@@ -38,11 +38,11 @@ public class ApprovalApiController {
         res.put("url", "approval/detail");
         Approval approval = approvalService.getApprovalById(id);
         Object o;
-        if(approval.getWordType() == WordType.WORD)  o = wordService.findById(approval.getTargetId());
-        else if(approval.getWordType() == WordType.TERM) o= termService.findById(approval.getTargetId());
-        else if(approval.getWordType() == WordType.DOMAIN) o=domainService.findById(approval.getTargetId());
-        else if(approval.getWordType() == WordType.CODE) o=domainService.findCodeById(approval.getTargetId());
-        else if(approval.getWordType() == WordType.TERMWORD) o=termService.findById(approval.getTargetId());
+        if (approval.getWordType() == WordType.WORD) o = wordService.findById(approval.getTargetId());
+        else if (approval.getWordType() == WordType.TERM) o = termService.findById(approval.getTargetId());
+        else if (approval.getWordType() == WordType.DOMAIN) o = domainService.findById(approval.getTargetId());
+        else if (approval.getWordType() == WordType.CODE) o = domainService.findCodeById(approval.getTargetId());
+        else if (approval.getWordType() == WordType.TERMWORD) o = termService.findById(approval.getTargetId());
         else throw new IllegalArgumentException("결재 처리 실패 : 잘못된 결재입니다.");
         res.put("approval", approval);
         res.put("basic", o);
