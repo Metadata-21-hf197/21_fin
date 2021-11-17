@@ -20,12 +20,9 @@ public class BanWordController {
     private BanWordService banWordService;
 
     @GetMapping("/table/banword")
-    private String home(Model model) {
-        List<String> banWordList = new ArrayList<>();
-        banWordList = banWordService.getBanWordList();
-
+    private String home() {
         Map<String, Object> map = new HashMap<>();
-        map.put("banWordList", banWordList);
+        map.put("banWordList", banWordService.getBanWordList());
         return "table/banword";
     }
 

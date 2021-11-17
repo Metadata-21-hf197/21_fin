@@ -22,6 +22,12 @@ public class ApprovalController {
         res.put("Approvals", approvalService.getApprovals(ApprovalStatus.Pending));
         return res;
     }
+    @GetMapping("/table/approval/confirmed")
+    public Map<String, Object> done(){
+        Map<String, Object> res = new HashMap<>();
+        res.put("Approvals", approvalService.getApprovals(ApprovalStatus.Confirm));
+        return res;
+    }
 
     @GetMapping("/table/approval/insert")
     public String insertForm(){

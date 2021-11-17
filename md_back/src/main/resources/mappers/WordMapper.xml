@@ -13,7 +13,7 @@
         <result property="createDate" column="createDate"/>
         <result property="confirmDate" column="confirmDate"/>
         <association property="createUser" column="createUserId" select="getUserById"/>
-        <association property="confirmUser" column="confirmUserId" select="getUserById"/>
+        <association property="modifyUser" column="modifyUserId" select="getUserById"/>
     </resultMap>
 
     <resultMap id="wordTable" type="com.example.md_back.model.Word">
@@ -58,7 +58,7 @@
     </update>
 
     <select id="getWords" resultMap="wordTable">
-        SELECT *
+        SELECT id, engName, korName, shortName, createUserId, createDate
         FROM Word
         WHERE deleteStatus = 0
     </select>
@@ -76,7 +76,7 @@
         WHERE id = #{id}
     </select>
 
-    <select id="getWordListByUserId" parameterType="int" resultMap="wordTable">
+    <select id="getWordListByUserId" parameterType="int" resultMap="wordDetail">
         SELECT *
         FROM Word
         WHERE deleteStatus = 0

@@ -2,7 +2,6 @@ package com.example.md_back.controller;
 
 import com.example.md_back.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -15,7 +14,7 @@ public class WordController {
     private WordService wordService;
 
     @GetMapping("/table/word")
-    public Map<String, Object> wordHome(Model model) {
+    public Map<String, Object> wordHome() {
         Map<String, Object> res = new HashMap<>();
         res.put("words", wordService.getWords());
         return res;
@@ -37,7 +36,7 @@ public class WordController {
     @GetMapping("/table/word/{wordId}")
     public Map<String, Object> wordDetail(@PathVariable int wordId) {
         Map<String, Object> res = new HashMap<>();
-        res.put("url", "word/detail");
+        res.put("url", "word/detail/"+wordId);
         res.put("word", wordService.findById(wordId));
         return res;
     }

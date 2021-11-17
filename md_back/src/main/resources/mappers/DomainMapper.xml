@@ -18,8 +18,8 @@
         <result property="createDate" column="createDate"/>
         <result property="confirmDate" column="confirmDate"/>
         <association property="createUser" column="createUserId" select="getUserById"/>
-        <association property="confirmUser" column="confirmUserId" select="getUserById"/>
-        <collection property="code" column="code" select="getCodeByDomain"/>
+        <association property="modifyUser" column="modifyUserId" select="getUserById"/>
+        <collection property="codes" column="id" select="getCodeByDomain"/>
     </resultMap>
 
     <resultMap id="domainTable" type="com.example.md_back.model.Domain">
