@@ -14,6 +14,7 @@
         <result property="confirmDate" column="confirmDate"/>
         <association property="createUser" column="createUserId" select="getUserById"/>
         <association property="modifyUser" column="modifyUserId" select="getUserById"/>
+        <collection property="words" column="id" select="getWordIdListById"/>
     </resultMap>
 
     <resultMap id="termTable" type="com.example.md_back.model.Term">
@@ -31,6 +32,11 @@
         WHERE memberId = #{memberId}
     </select>
 
+    <select id="getWordIdListById" parameterType="int" resultType="int">
+        select wordId
+        FROM TermWord
+        WHERE  termId = #{id}
+    </select>
 
     <insert id="insertTerm" parameterType="com.example.md_back.model.Term" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO Term(shortName, engName, korName, meaning, deleteStatus, createUserId, createDate)
