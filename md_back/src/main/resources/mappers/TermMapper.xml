@@ -32,8 +32,8 @@
         WHERE memberId = #{memberId}
     </select>
 
-    <select id="getWordIdListById" parameterType="int" resultType="int">
-        select wordId
+    <select id="getWordIdListById" parameterType="int" resultType="com.example.md_back.model.TermWord">
+        select *
         FROM TermWord
         WHERE  termId = #{id}
     </select>

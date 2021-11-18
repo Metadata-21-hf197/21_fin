@@ -11,6 +11,6 @@ public class WordHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public String illegalArgumentHandler(IllegalArgumentException e){
         System.out.println(e.getMessage());  //
-        return "error page";
+        return e.getMessage();
     }
 }
