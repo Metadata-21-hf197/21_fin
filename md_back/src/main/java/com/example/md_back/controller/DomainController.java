@@ -28,14 +28,16 @@ public class DomainController {
     }
 
     @GetMapping("/table/domain/{domainId}/update")
-    public String updateForm(Model model, @PathVariable int domainId){
-        model.addAttribute("domain",domainService.findById(domainId));
-        return "domain/updateForm";
+    public Map<String, Object> updateForm(@PathVariable int domainId){
+        Map<String, Object> res = new HashMap<>();
+        res.put("domain",domainService.findById(domainId));
+        return res;
     }
 
     @GetMapping("/table/domain/{domainId}")
-    public String domainDetail(Model model, @PathVariable int domainId)  {
-        model.addAttribute("domain", domainService.findById(domainId));
-        return "domain/detail";
+    public Map<String, Object> domainDetail( @PathVariable int domainId)  {
+        Map<String, Object> res = new HashMap<>();
+        res.put("domain", domainService.findById(domainId));
+        return res;
     }
 }

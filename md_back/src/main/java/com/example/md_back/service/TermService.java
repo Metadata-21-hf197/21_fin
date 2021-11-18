@@ -74,68 +74,32 @@ public class TermService {
     }
 
     @Transactional
-    public List<Approval> dtoToApproval(User user, TermDto termDto, int targetId) {  // UPDATE
-        if (termDto.getEngName() == null)throw new IllegalArgumentException("결재 생성 실패 : 영문명이 공백입니다.");
+    public Approval dtoToApproval(User user, TermDto termDto, int targetId) {  // UPDATE
+        if (termDto.getEngName() == null) throw new IllegalArgumentException("결재 생성 실패 : 영문명이 공백입니다.");
         Term term = termMapper.getTermById(targetId);
         if (term == null) throw new IllegalArgumentException("결재 생성 실패 : 용어를 찾을 수 없습니다.");
         else if (term.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 삭제된 용어입니다.");
 
-        for (int i : termDto.getWords()) {
-            if (wordMapper.getWordById(i) == null)
-                throw new IllegalArgumentException("결재 생성 실패 : 용어 단어 리스트 손상");
-        }
-        List<Approval> result = new ArrayList<>();
-        if (termDto.getEngName() != null || termDto.getKorName() != null || termDto.getShortName() != null || termDto.getMeaning() != null) {
-            Approval approval = Approval.builder()
-                    .createUser(user)
-                    .targetId(targetId)
-                    .wordType(WordType.TERM)
-                    .approvalType(ApprovalType.UPDATE)
-                    .build();
-            if (Objects.equals(term.getEngName(), termDto.getEngName())) approval.setEngName(null);
-            else approval.setEngName(termDto.getEngName());
-            if (Objects.equals(term.getKorName(), termDto.getKorName())) approval.setKorName(null);
-            else approval.setKorName(termDto.getKorName());
-            if (Objects.equals(term.getShortName(), termDto.getShortName())) approval.setShortName(null);
-            else approval.setShortName(termDto.getShortName());
-            if (Objects.equals(term.getMeaning(), termDto.getMeaning())) approval.setMeaning(null);
-            else approval.setMeaning(termDto.getMeaning());
-            result.add(approval);
-        }// TERM
-
-
-        if (termDto.getWords() != null) { // TERMWORD
-            List<Integer> termWords = termWordMapper.getWordIdListByTermId(targetId);
-            for (int pastTW : termWords) {
-                if (!termDto.getWords().contains(pastTW)) {
-                    result.add(Approval.builder()
-                            .createUser(user)
-                            .targetId(targetId)
-                            .slaveId(pastTW)
-                            .wordType(WordType.TERMWORD)
-                            .approvalType(ApprovalType.DELETE)
-                            .build());
-                }
-            } // delete
-
-            for (int currentTW : termDto.getWords()) {
-                if (!termWords.contains(currentTW)) { // isNotExist works?
-                    result.add(Approval.builder()
-                            .createUser(user)
-                            .targetId(targetId)
-                            .slaveId(currentTW)
-                            .wordType(WordType.TERMWORD)
-                            .approvalType(ApprovalType.CREATE)
-                            .build());
-                }
-            } // create
-        }
-        return result;
+        Approval approval = Approval.builder()
+                .createUser(user)
+                .targetId(targetId)
+                .wordType(WordType.TERM)
+                .approvalType(ApprovalType.UPDATE)
+                .build();
+        if (Objects.equals(term.getEngName(), termDto.getEngName())) approval.setEngName(null);
+        else approval.setEngName(termDto.getEngName());
+        if (Objects.equals(term.getKorName(), termDto.getKorName())) approval.setKorName(null);
+        else approval.setKorName(termDto.getKorName());
+        if (Objects.equals(term.getShortName(), termDto.getShortName())) approval.setShortName(null);
+        else approval.setShortName(termDto.getShortName());
+        if (Objects.equals(term.getMeaning(), termDto.getMeaning())) approval.setMeaning(null);
+        else approval.setMeaning(termDto.getMeaning());
+        return approval;
     }
 
     @Transactional
     public Approval dtoToApproval(User user, TermDto termDto) {  // CREATE
-        if (termDto.getEngName() == null)throw new IllegalArgumentException("결재 생성 실패 : 영문명이 공백입니다.");
+        if (termDto.getEngName() == null) throw new IllegalArgumentException("결재 생성 실패 : 영문명이 공백입니다.");
         return Approval.builder()
                 .createUser(user)
                 .targetId(0)
@@ -158,6 +122,28 @@ public class TermService {
                 .targetId(targetId)
                 .approvalType(ApprovalType.DELETE)
                 .wordType(WordType.TERM)
+                .build();
+    }
+
+    @Transactional
+    public Approval dtoToApproval(User user, int termId, int wordId, ApprovalType approvalType) {  // CREATE TW
+        Term term = termMapper.getTermById(termId);
+        if (term == null) throw new IllegalArgumentException("결재 생성 실패 : 용어를 찾을 수 없습니다.");
+        else if (term.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 이미 삭제된 용어입니다");
+
+        Word word = wordMapper.getWordById(wordId);
+        if (word == null) throw new IllegalArgumentException("결재 생성 실패 : 단어를 찾을 수 없습니다.");
+        else if (word.isDeleteStatus()) throw new IllegalArgumentException("결재 생성 실패 : 이미 삭제된 단어입니다");
+
+        if (approvalType != ApprovalType.CREATE && approvalType != ApprovalType.DELETE)
+            throw new IllegalArgumentException("결재 생성 실패 : 잘못된 타입입니다.");
+
+        return Approval.builder()
+                .createUser(user)
+                .targetId(termId)
+                .slaveId(wordId)
+                .approvalType(approvalType)
+                .wordType(WordType.TERMWORD)            // headers
                 .build();
     }
 

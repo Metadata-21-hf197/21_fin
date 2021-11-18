@@ -1,6 +1,7 @@
 package com.example.md_back.controller;
 
 import com.example.md_back.service.TermService;
+import com.example.md_back.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,9 @@ public class TermController {
 
     @Autowired
     private TermService termService;
+
+    @Autowired
+    private WordService wordService;
 
     @GetMapping("/table/term/insert")
     public String insertForm() {
@@ -31,7 +35,8 @@ public class TermController {
         Map<String, Object> map = new HashMap<>();
         map.put("url", "term/detail");
         map.put("term", termService.findById(termId));
-        map.put("words", termService.getWordListByTermId(termId));
+        map.put("twords", termService.getWordListByTermId(termId));
+        map.put("words", wordService.getWords());
         return map;
     }
 

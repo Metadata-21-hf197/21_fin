@@ -3,6 +3,7 @@ package com.example.md_back.controller.api;
 import com.example.md_back.dto.LoginDTO;
 import com.example.md_back.dto.TermDto;
 import com.example.md_back.model.Approval;
+import com.example.md_back.model.ApprovalType;
 import com.example.md_back.service.ApprovalService;
 import com.example.md_back.service.TermService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,28 @@ public class TermApiController {
 
     @PutMapping("/term/{termId}")
     public int update(@PathVariable int termId, @RequestBody TermDto termDto, @AuthenticationPrincipal LoginDTO loginDTO) {
-        List<Approval> approvals = termService.dtoToApproval(loginDTO.getUser(), termDto, termId);
-        approvalService.insertApprovals(approvals);
+        Approval approval = termService.dtoToApproval(loginDTO.getUser(), termDto, termId);
+        approvalService.insert(approval);
         return HttpStatus.OK.value();
     }
 
     @DeleteMapping("/term/{termId}")
     public int delete(@PathVariable int termId, @AuthenticationPrincipal LoginDTO loginDTO) {
         Approval approval = termService.dtoToApproval(loginDTO.getUser(), termId);
+        approvalService.insert(approval);
+        return HttpStatus.OK.value();
+    }
+
+    @PostMapping("/term/{termId}/{wordId}")
+    public int insertTW(@PathVariable int termId, @PathVariable int wordId, @AuthenticationPrincipal LoginDTO loginDTO) {
+        Approval approval = termService.dtoToApproval(loginDTO.getUser(), termId, wordId, ApprovalType.CREATE);
+        approvalService.insert(approval);
+        return HttpStatus.OK.value();
+    }
+
+    @DeleteMapping ("/term/{termId}/{wordId}")
+    public int deleteTW(@PathVariable int termId, @PathVariable int wordId, @AuthenticationPrincipal LoginDTO loginDTO) {
+        Approval approval = termService.dtoToApproval(loginDTO.getUser(), termId, wordId, ApprovalType.DELETE);
         approvalService.insert(approval);
         return HttpStatus.OK.value();
     }
