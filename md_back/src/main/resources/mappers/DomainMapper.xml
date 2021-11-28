@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.md_back.mappers.DomainMapper">
+    <insert id="insertDomain" parameterType="com.example.md_back.model.Domain" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Domain(shortName, engName, korName, meaning, deleteStatus, createUserId, createDate)
+        VALUES (#{shortName}, #{engName}, #{korName}, #{meaning}, 0, #{createUser.memberId}, #{createDate})
+    </insert>
+
+    <resultMap id="domainDetail" type="com.example.md_back.model.Domain">
+        <id property="id" column="id"/>
+        <result property="shortName" column="shortName"/>
+        <result property="engName" column="engName"/>
+        <result property="korName" column="korName"/>
+        <result property="meaning" column="meaning"/>
+        <result property="createDate" column="createDate"/>
+        <result property="confirmDate" column="confirmDate"/>
+        <association property="createUser" column="createUserId" select="getUserById"/>
+        <association property="modifyUser" column="modifyUserId" select="getUserById"/>
+        <collection property="codes" column="id" select="getCodeByDomain"/>
+    </resultMap>
+
+    <resultMap id="domainTable" type="com.example.md_back.model.Domain">
+        <id property="id" column="id"/>
+        <result property="shortName" column="shortName"/>
+        <result property="engName" column="engName"/>
+        <result property="korName" column="korName"/>
+        <result property="meaning" column="meaning"/>
+        <result property="createDate" column="createDate"/>
+        <association property="createUser" column="createUserId" select="getUserById"/>
+    </resultMap>
+
+
+    <select id="getUserById" parameterType="int" resultType="com.example.md_back.model.User">
+        select memberId, memberName, email, userRole
+        FROM User
+        WHERE memberId = #{memberId}
+    </select>
+
+    <select id="getCodeByDomain" parameterType="int" resultType="com.example.md_back.model.Code">
+        select id, engName, korName, shortName, domainId
+        FROM Code
+        WHERE domainId = #{domainId}
+    </select>
+
+
+    <update id="updateDomain" parameterType="com.example.md_back.model.Domain">
+        UPDATE Domain
+        <set>
+        <if test="shortName != null">shortName=#{shortName},</if>
+        <if test="engName != null">engName=#{engName},</if>
+        <if test="korName != null">korName=#{korName},</if>
+        <if test="meaning != null">meaning=#{meaning},</if>
+        modifyUserId = #{modifyUser.memberId},
+        modifyDate = #{modifyDate}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateDomainByCode" parameterType="com.example.md_back.model.Approval">
+        UPDATE Domain
+        SET modifyUserId = #{createUser.memberId},
+            modifyDate   = #{createDate}
+        WHERE id = #{slaveId}
+    </update>
+
+    <update id="deleteDomain" parameterType="com.example.md_back.model.Domain">
+        UPDATE Domain
+        SET deleteStatus = 1,
+            modifyUserId = #{modifyUser.memberId},
+            modifyDate   = #{modifyDate}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getDomains" resultMap="domainTable">
+        SELECT *
+        FROM Domain
+        WHERE deleteStatus = 0
+    </select>
+
+    <select id="getDomainsByName" parameterType="String" resultMap="domainDetail">
+        SELECT *
+        FROM Domain
+        WHERE deleteStatus = 0
+          And (shortName = #{name} OR engName = #{name} OR korName = #{name})
+    </select>
+
+    <select id="getDomainById" parameterType="int" resultMap="domainDetail">
+        SELECT *
+        FROM Domain
+        WHERE id = #{id}
+    </select>
+
+    <select id="getDomainsByUserId" parameterType="int" resultMap="domainTable">
+        SELECT *
+        FROM Domain
+        WHERE deleteStatus = 0
+          AND (createUserId = #{userId} OR modifyUserId = #{userId})
+    </select>
+
+    <delete id="deleteDomainDB" parameterType="int">
+        DELETE
+        FROM Domain
+        WHERE id = #{id}
+    </delete>
+</mapper>

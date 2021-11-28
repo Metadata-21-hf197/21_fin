@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.md_back.mappers.TermMapper">
+    <resultMap id="termDetail" type="com.example.md_back.model.Term">
+        <id property="id" column="id"/>
+        <result property="shortName" column="shortName"/>
+        <result property="engName" column="engName"/>
+        <result property="korName" column="korName"/>
+        <result property="meaning" column="meaning"/>
+        <result property="createDate" column="createDate"/>
+        <result property="confirmDate" column="confirmDate"/>
+        <association property="createUser" column="createUserId" select="getUserById"/>
+        <association property="modifyUser" column="modifyUserId" select="getUserById"/>
+        <collection property="words" column="id" select="getWordIdListById"/>
+    </resultMap>
+
+    <resultMap id="termTable" type="com.example.md_back.model.Term">
+        <id property="id" column="id"/>
+        <result property="shortName" column="shortName"/>
+        <result property="engName" column="engName"/>
+        <result property="korName" column="korName"/>
+        <result property="createDate" column="createDate"/>
+        <association property="createUser" column="createUserId" select="getUserById"/>
+    </resultMap>
+
+    <select id="getUserById" parameterType="int" resultType="com.example.md_back.model.User">
+        select memberId, memberName, email, userRole
+        FROM User
+        WHERE memberId = #{memberId}
+    </select>
+
+    <select id="getWordIdListById" parameterType="int" resultType="com.example.md_back.model.TermWord">
+        select *
+        FROM TermWord
+        WHERE  termId = #{id}
+    </select>
+
+    <insert id="insertTerm" parameterType="com.example.md_back.model.Term" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Term(shortName, engName, korName, meaning, deleteStatus, createUserId, createDate)
+        VALUES (#{shortName}, #{engName}, #{korName}, #{meaning}, 0, #{createUser.memberId}, #{createDate})
+    </insert>
+
+    <update id="updateTerm" parameterType="com.example.md_back.model.Term">
+        UPDATE Term
+        <set>
+        <if test="shortName != null">shortName=#{shortName},</if>
+        <if test="engName != null">engName=#{engName},</if>
+        <if test="korName != null">korName=#{korName},</if>
+        <if test="meaning != null">meaning=#{meaning},</if>
+        modifyUserId = #{modifyUser.memberId},
+        modifyDate = #{modifyDate}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="deleteTerm" parameterType="com.example.md_back.model.Term">
+        UPDATE Term
+        SET deleteStatus = 1,
+            modifyUserId = #{modifyUser.memberId},
+            modifyDate   = #{modifyDate}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getTerms" resultMap="termTable">
+        SELECT *
+        FROM Term
+        WHERE deleteStatus = 0
+    </select>
+
+    <select id="getTermsByName" parameterType="String" resultMap="termDetail">
+        SELECT *
+        FROM Term
+        WHERE deleteStatus = 0
+          AND (shortName = #{name} OR engName = #{name} OR korName = #{name})
+    </select>
+
+    <select id="getTermById" parameterType="int" resultMap="termDetail">
+        SELECT *
+        FROM Term
+        WHERE id = #{id}
+    </select>
+
+    <select id="getTermsByUserId" parameterType="int" resultMap="termTable">
+        SELECT *
+        FROM Term
+        WHERE deleteStatus = 0
+          AND (createUserId = #{userId} OR modifyUserId = #{userId})
+    </select>
+
+    <delete id="deleteTermDB" parameterType="int">
+        DELETE
+        FROM Term
+        WHERE id = #{id}
+    </delete>
+
+    <update id="updateTermByTermWord" parameterType="com.example.md_back.model.Approval">
+        UPDATE Term
+        SET modifyUserId = #{createUser.memberId},
+            modifyDate = #{createDate}
+        WHERE id = #{targetId}
+    </update>
+</mapper>

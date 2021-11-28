@@ -1,59 +1,122 @@
 package com.example.md_back.user;
 
-import com.example.md_back.model.User;
-import com.example.md_back.repository.UserRepository;
+import com.example.md_back.dto.LoginDTO;
+import com.example.md_back.model.*;
+import com.example.md_back.service.ApprovalService;
+import com.example.md_back.service.DomainService;
+import com.example.md_back.service.TermService;
+import com.example.md_back.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@RestController
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+    @Autowired
+    private WordService wordService;
+    @Autowired
+    private TermService termService;
+    @Autowired
+    private ApprovalService approvalService;
+    @Autowired
+    private DomainService domainService;
 
-    //join form
-    @GetMapping("/user/join")
+    @PostMapping
     @ResponseBody
-    public String userForm() {
-        return "user join";
+    public Map<String, Object> insert(
+            @RequestParam("memberName") String memberName,
+            @RequestParam("password") String password,
+            @RequestParam("email") String email) { //userRole?
+        User user = new User(memberName, password, email);
+        userService.insertUser(user);
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("result", "success");
+        map.put("memberName", user.getMemberName());
+
+        return map;
+
+
+
+
     }
+
+
+
+    /**
+     * get quitForm
+     *
+     * @return user/quitForm
+     */
+    @GetMapping("/user/quit")
+    public String quitForm() {
+        return "templates/user/quitForm";
+    }
+
 
     /**
      * insert user
      * react 사용에 따라 return 타입 변경 가능
+     *
      * @return
      */
+    @Transactional
     @PostMapping("/user/join")
     @ResponseBody
-    public Map<String, Object> insert() {
-        //User 객체 생성
-        //값 setting
-        //insert 동작
+    public Map<String, Object> insert(@RequestParam("memberName") String memberName,
+                                      @RequestParam("password") String password,
+                                      @RequestParam("email") String email,
+                                      @RequestParam("userRole") String userRole) {
+        User user = new User();
+        user.setMemberName(memberName);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setUserRole(userRole);
+        userService.insertUser(user);
         //return result
-        return null;
+
+        Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("result", "success");
+
+        return returnMap;
     }
 
-    @PutMapping("/user/update")
+    @GetMapping("/mypage")
     @ResponseBody
-    public Map<String, Object> update(User user) {
-        //User 객체 확인
-        // 새 값 setting
-        //update
-        //return result
-        return null;
-    }
+    public Map<String, Object> userWordList(
+            @AuthenticationPrincipal LoginDTO principal) throws Exception {
+        User user = new User();
+        List<Word> wordList = new ArrayList<>();
+        List<Term> termList = new ArrayList<>();
+        List<Approval> approvalList = new ArrayList<>();
+        List<Domain> domainList = new ArrayList();
 
-    /**
-     * delete동작에서는 session으로 사용자 확인 후 동작 가능
-     * @param user
-     * @return
-     */
-    @DeleteMapping("/user/delete")
-    @ResponseBody
-    public Map<String, Object> delete(User user) {
-        //사용자 id로 객체 제거
-        // delete 동작
-        //return result
-        return null;
+        if(!SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("ADMIN")) {
+            MyAuthentication authentication = (MyAuthentication) SecurityContextHolder.getContext().getAuthentication();
+            user = (User) authentication.principal.getUser();
+
+
+            int userId = user.getMemberId();
+            wordList = wordService.getWordListByUserId(userId);
+            termList = termService.getTermListByUserId(userId);
+            approvalList = approvalService.getApprovalsByCreateUserId(userId);
+            domainList = domainService.getDomainListByUserid(userId);
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("wordList", wordList);
+        map.put("termList", termList);
+        map.put("approvalList", approvalList);
+        map.put("domainList", domainList);
+        return map;
+
     }
 }

@@ -1,5 +1,6 @@
 package com.example.md_back.model;
 
+import com.example.md_back.dto.LoginDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,9 +8,12 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.Date;
 
 @Data
@@ -42,6 +46,12 @@ public class User {
     private boolean quitStatus;
 
     @Column(nullable = false)
-    private String access;
+    private String userRole;
+
+    public User(String memberName, String password, String email) {
+        this.memberName = memberName;
+        this.password = password;
+        this.email = email;
+    }
 
 }
